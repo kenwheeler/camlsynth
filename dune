@@ -1,0 +1,11 @@
+(executable
+    (name App)
+    (package App)
+    (public_name App)
+    (libraries
+        bigarray
+        reglfw
+        Revery
+        portaudio
+        threads.posix
+            ))
