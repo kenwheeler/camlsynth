@@ -1,5 +1,5 @@
 {
-  "checksum": "aa8c99b81c40ded67237d08dee4e4a8b",
+  "checksum": "fc4c580a3a40b1970997d49d877f8ba8",
   "root": "revery-quick-start@link-dev:./package.json",
   "node": {
     "revery-quick-start@link-dev:./package.json": {
@@ -14,7 +14,7 @@
       "overrides": [],
       "dependencies": [
         "revery@0.27.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
-        "@opam/portaudio@github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0@d41d8cd9",
+        "@opam/portaudio@link:/Users/ken_formidable/dev/jordanportaudio/portaudio.opam",
         "@opam/dune@opam:1.7.3@e23fe0a7"
       ],
       "devDependencies": [
@@ -777,17 +777,16 @@
         "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.3@e23fe0a7"
       ]
     },
-    "@opam/portaudio@github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0@d41d8cd9": {
+    "@opam/portaudio@link:/Users/ken_formidable/dev/jordanportaudio/portaudio.opam": {
       "id":
-        "@opam/portaudio@github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0@d41d8cd9",
+        "@opam/portaudio@link:/Users/ken_formidable/dev/jordanportaudio/portaudio.opam",
       "name": "@opam/portaudio",
       "version":
-        "github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0",
+        "link:/Users/ken_formidable/dev/jordanportaudio/portaudio.opam",
       "source": {
-        "type": "install",
-        "source": [
-          "github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0"
-        ]
+        "type": "link",
+        "path": "/Users/ken_formidable/dev/jordanportaudio",
+        "manifest": "portaudio.opam"
       },
       "overrides": [],
       "dependencies": [

@@ -5,9 +5,34 @@ open Revery.UI.Components;
 open Portaudio;
 open Bigarray;
 
+let bufferSize = 512;
+
 Console.log("Using " ++ get_version_string());
 Random.self_init();
 Portaudio.init();
+
+let osc = Oscillator.create();
+osc#setFrequency(220.);
+let arr = Array.create_float(bufferSize);
+
+let fill_ba = ba => {
+  for (i in 0 to bufferSize - 1) {
+    osc#generate(arr, bufferSize);
+    let left = [|2 * i|];
+    let right = [|2 * i + 1|];
+    Genarray.set(ba, left, arr[i]);
+    Genarray.set(ba, right, arr[i]);
+  };
+};
+
+let test_bigarray = (stream, inter, batype) => {
+  let dims = [|2 * bufferSize|];
+  let ba = Genarray.create(batype, c_layout, dims);
+  for (j in 0 to 172) {
+    fill_ba(ba);
+    Portaudio.write_stream_ba(stream, ba, 0, bufferSize);
+  };
+};
 
 let device = Portaudio.get_device_info(4);
 Console.log(
@@ -19,7 +44,6 @@ Console.log(
 Console.log("Device name: " ++ device.d_name);
 
 let play = () => {
-  Console.log("PLAY CLICKED");
   let outparam =
     Some({
       channels: 2,
@@ -27,29 +51,12 @@ let play = () => {
       sample_format: format_float32,
       latency: device.d_default_low_output_latency,
     });
-  let r = () => {
-    1. -. Random.float(2.);
-  };
-  let cb = (x, y, l) => {
-    let d = l - 1;
-    for (i in 0 to d) {
-      Genarray.set(y, [|2 * i|], r());
-      Genarray.set(y, [|2 * i + 1|], r());
-    };
-    0;
-  };
 
   let stream =
-    open_stream(
-      ~callback=cb,
-      None,
-      outparam,
-      device.d_default_sample_rate,
-      0,
-      [],
-    );
+    open_stream(None, outparam, device.d_default_sample_rate, bufferSize, []);
+
   start_stream(stream);
-  sleep(500);
+  test_bigarray(stream, 1, float32);
   close_stream(stream);
 };
 
