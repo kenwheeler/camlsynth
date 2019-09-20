@@ -1,28 +1,35 @@
 open Settings;
 
-type osc = {table: array(float)};
+type osc = {
+  .
+  freq: float,
+  gain: float,
+  getData: float => float,
+};
 
 type wave =
   | Sine
-  | Saw;
+  | Saw
+  | Square
+  | Noise;
 
-let generateTable = wave => {
-  let table = Array.create_float(tableSize);
+let create = (mode: wave, freq: float, gain: float) => {
+  let ret: osc = {
+    pub freq = freq;
+    pub gain = gain;
+    pub getData = mtime => {
+      let fpt = 1. /. this#freq; /* full period time */
+      let hpt = fpt /. 2.; /* half period time */
+      let lt = mod_float(mtime, fpt); /* local time */
+      let doublePi = Float.pi *. 2.;
 
-  for (i in 0 to tableSize - 1) {
-    switch (wave) {
-    | Sine =>
-      table[i] =
-        sin(float_of_int(i) /. float_of_int(tableSize) *. mPI *. 2.)
-    | Saw =>
-      table[i] = 1.0 -. 2.0 *. float_of_int(i) /. float_of_int(tableSize)
-    };
+      switch (mode) {
+      | Sine => this#gain *. sin(2. *. doublePi *. this#freq *. mtime)
+      | Square => this#gain *. (lt < hpt ? 1.0 : (-1.0))
+      | Saw => this#gain *. (lt /. fpt *. 2. -. 1.0)
+      | Noise => this#gain *. 1. -. Random.float(2.)
+      };
+    }
   };
-
-  table;
-};
-
-let create = () => {
-  let ret = {table: generateTable(Sine)};
   ret;
 };
