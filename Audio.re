@@ -11,7 +11,7 @@ let playing = ref(false);
 
 Random.self_init();
 Portaudio.init();
-let osc1 = Osc.create(Osc.Saw, 80.5, 0.5);
+let osc1 = {Osc.mode: Osc.Saw, freq: 80.5, gain: 0.5};
 
 let deviceId = Portaudio.get_default_output_device();
 let device = Portaudio.get_device_info(deviceId);
@@ -38,7 +38,7 @@ let fill_ba = ba => {
       mtime := 0.;
     };
 
-    let data = osc1#getData(mtime^);
+    let data = Osc.getData(mtime.contents, osc1);
 
     /* Increment time by sample */
     mtime := mtime^ +. mdelta;
