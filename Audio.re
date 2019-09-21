@@ -6,6 +6,7 @@ open Settings;
 let mtime = ref(0.0);
 /* Time increment by sample rate */
 let mdelta = 1. /. sampleRate;
+let currentSample = ref(0.0);
 
 let playing = ref(false);
 
@@ -31,9 +32,17 @@ let getStream = () => {
   stream;
 };
 
-let fill_ba = ba => {
+let fill_ba = (ba, setStep) => {
+  /* time */
   /* Fill the buffer */
   for (i in 0 to bufferSize - 1) {
+    if (mod_float(currentSample^, step) == 0.0) {
+      Console.log(int_of_float(currentSample^ /. step));
+      setStep(int_of_float(currentSample^ /. step));
+    };
+    if (currentSample^ > step *. 16.) {
+      currentSample := 0.0;
+    };
     /* Reset mtime if it gets too big */
     if (mtime^ > Float.max_float) {
       mtime := 0.;
@@ -51,6 +60,8 @@ let fill_ba = ba => {
     /* Increment time by sample */
     mtime := mtime^ +. mdelta;
 
+    currentSample := currentSample^ +. 1.0;
+
     let left = [|2 * i|];
     let right = [|2 * i + 1|];
     /* Set the data at the index */
@@ -63,15 +74,16 @@ let stop = stream => {
   playing := false;
   stop_stream(stream);
 };
-let play = stream => {
+let play = (stream, steps, setStep) => {
   mtime := 0.;
   playing := true;
+  currentSample := 0.;
   /* Create array relative to buffer size */
   let dims = [|2 * bufferSize|];
   let ba = Genarray.create(float32, c_layout, dims);
   /* Fill the array on loop and write */
   while (playing^ === true) {
-    fill_ba(ba);
+    fill_ba(ba, setStep);
     Portaudio.write_stream_ba(stream, ba, 0, bufferSize);
   };
   ();

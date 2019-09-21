@@ -23,6 +23,7 @@ let createElement = (~children as _, ()) =>
         hooks,
       );
     let (playing, setPlaying, hooks) = React.Hooks.state(false, hooks);
+    let (active, setActive, hooks) = React.Hooks.state(5, hooks);
 
     let updateStep = (index, ()) => {
       let s = Array.copy(steps);
@@ -30,13 +31,19 @@ let createElement = (~children as _, ()) =>
       setSteps(s);
     };
 
+    let setActiveStep = step => {
+      setActive(step - 1);
+    };
+
     let playToggle = () => {
       if (playing) {
+        setActiveStep(0);
         Audio.stop(stream);
         setPlaying(false);
       } else {
         start_stream(stream);
-        let _handle = Thread.create(() => Audio.play(stream), ());
+        let _handle =
+          Thread.create(() => Audio.play(stream, steps, setActiveStep), ());
         setPlaying(true);
       };
 
@@ -107,6 +114,7 @@ let createElement = (~children as _, ()) =>
         flexDirection(`Row),
         justifyContent(`SpaceBetween),
       ];
+
     (
       hooks,
       <View style=containerStyle>
@@ -120,88 +128,88 @@ let createElement = (~children as _, ()) =>
             <View style=stepGroup>
               <Step
                 color=Red
-                active={steps[0] === 1 ? true : false}
+                active={(steps[0] === 1 ? true : false) || active === 0}
                 onClick={updateStep(0)}
               />
               <Step
                 color=Red
-                active={steps[1] === 1 ? true : false}
+                active={(steps[1] === 1 ? true : false) || active === 1}
                 onClick={updateStep(1)}
               />
               <Step
                 color=Red
-                active={steps[2] === 1 ? true : false}
+                active={(steps[2] === 1 ? true : false) || active === 2}
                 onClick={updateStep(2)}
               />
               <Step
                 color=Red
-                active={steps[3] === 1 ? true : false}
+                active={(steps[3] === 1 ? true : false) || active === 3}
                 onClick={updateStep(3)}
               />
             </View>
             <View style=stepGroup>
               <Step
                 color=Orange
-                active={steps[4] === 1 ? true : false}
+                active={(steps[4] === 1 ? true : false) || active === 4}
                 onClick={updateStep(4)}
               />
               <Step
                 color=Orange
-                active={steps[5] === 1 ? true : false}
+                active={(steps[5] === 1 ? true : false) || active === 5}
                 onClick={updateStep(5)}
               />
               <Step
                 color=Orange
-                active={steps[6] === 1 ? true : false}
+                active={(steps[6] === 1 ? true : false) || active === 6}
                 onClick={updateStep(6)}
               />
               <Step
                 color=Orange
-                active={steps[7] === 1 ? true : false}
+                active={(steps[7] === 1 ? true : false) || active === 7}
                 onClick={updateStep(7)}
               />
             </View>
             <View style=stepGroup>
               <Step
                 color=Yellow
-                active={steps[8] === 1 ? true : false}
+                active={(steps[8] === 1 ? true : false) || active === 8}
                 onClick={updateStep(8)}
               />
               <Step
                 color=Yellow
-                active={steps[9] === 1 ? true : false}
+                active={(steps[9] === 1 ? true : false) || active === 9}
                 onClick={updateStep(9)}
               />
               <Step
                 color=Yellow
-                active={steps[10] === 1 ? true : false}
+                active={(steps[10] === 1 ? true : false) || active === 10}
                 onClick={updateStep(10)}
               />
               <Step
                 color=Yellow
-                active={steps[11] === 1 ? true : false}
+                active={(steps[11] === 1 ? true : false) || active === 11}
                 onClick={updateStep(11)}
               />
             </View>
             <View style=stepGroup>
               <Step
                 color=White
-                active={steps[12] === 1 ? true : false}
+                active={(steps[12] === 1 ? true : false) || active === 12}
                 onClick={updateStep(12)}
               />
               <Step
                 color=White
-                active={steps[13] === 1 ? true : false}
+                active={(steps[13] === 1 ? true : false) || active === 13}
                 onClick={updateStep(13)}
               />
               <Step
                 color=White
-                active={steps[14] === 1 ? true : false}
+                active={(steps[14] === 1 ? true : false) || active === 14}
                 onClick={updateStep(14)}
               />
               <Step
                 color=White
-                active={steps[15] === 1 ? true : false}
+                active={(steps[15] === 1 ? true : false) || active === 15}
                 onClick={updateStep(15)}
               />
             </View>
