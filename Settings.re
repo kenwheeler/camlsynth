@@ -1,2 +1,2 @@
-let bufferSize = 210;
+let bufferSize = 1024;
 let sampleRate = 44100.;

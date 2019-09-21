@@ -11,7 +11,8 @@ let playing = ref(false);
 
 Random.self_init();
 Portaudio.init();
-let osc1 = Osc.create(Osc.Saw, 80.5, 0.5);
+let osc1 = Osc.create(Osc.Sine, 27.5, 0.75);
+let env1 = Envelope.create(0.01, 0.25, 0.1, 0.5);
 
 let deviceId = Portaudio.get_default_output_device();
 let device = Portaudio.get_device_info(deviceId);
@@ -38,7 +39,14 @@ let fill_ba = ba => {
       mtime := 0.;
     };
 
-    let data = osc1#getData(mtime^);
+    if (env1#getStage() === Off) {
+      env1#enterStage(Attack);
+    };
+
+    if (env1#getStage() === Sustain) {
+      env1#enterStage(Release);
+    };
+    let data = osc1#getData(mtime^) *. env1#nextSample();
 
     /* Increment time by sample */
     mtime := mtime^ +. mdelta;
@@ -56,6 +64,7 @@ let stop = stream => {
   stop_stream(stream);
 };
 let play = stream => {
+  mtime := 0.;
   playing := true;
   /* Create array relative to buffer size */
   let dims = [|2 * bufferSize|];
