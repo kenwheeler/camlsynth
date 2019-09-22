@@ -45,6 +45,10 @@ let createElement = (~children as _, ()) =>
       dispatch(UpdateStep(index));
     };
 
+    let updateTrack = (track, ()) => {
+      dispatch(SetActiveTrack(track));
+    };
+
     let playToggle = () => {
       if (appState.playing) {
         setActiveStep(0);
@@ -129,12 +133,38 @@ let createElement = (~children as _, ()) =>
         justifyContent(`SpaceBetween),
       ];
 
+    let trackStyle =
+      Style.[
+        alignItems(`FlexStart),
+        flexDirection(`Row),
+        flexGrow(1),
+        marginLeft(20),
+        justifyContent(`FlexStart),
+      ];
+
     let currentSteps = appState.tracks[appState.activeTrack].steps;
 
     (
       hooks,
       <View style=containerStyle>
         <View style=headerStyle>
+          <View style=trackStyle>
+            <TrackButton
+              onClick={updateTrack(0)}
+              active={appState.activeTrack == 0}
+              text="KICK"
+            />
+            <TrackButton
+              onClick={updateTrack(1)}
+              active={appState.activeTrack == 1}
+              text="SNARE"
+            />
+            <TrackButton
+              onClick={updateTrack(2)}
+              active={appState.activeTrack == 2}
+              text="HAT"
+            />
+          </View>
           <Text style=textHeaderStyle text="Reason Composer" />
           <Text style=subTextStyle text="ML-808" />
         </View>
@@ -149,8 +179,9 @@ let createElement = (~children as _, ()) =>
                     <Step
                       color=Red
                       active={
-                        (s === 1 ? true : false)
-                        || appState.activeStep === index
+                        s === 1
+                          ? appState.activeStep === index ? false : true
+                          : appState.activeStep === index ? true : false
                       }
                       onClick={updateStep(index)}
                     />;
@@ -167,8 +198,9 @@ let createElement = (~children as _, ()) =>
                     <Step
                       color=Orange
                       active={
-                        (s === 1 ? true : false)
-                        || appState.activeStep === index
+                        s === 1
+                          ? appState.activeStep === index ? false : true
+                          : appState.activeStep === index ? true : false
                       }
                       onClick={updateStep(index)}
                     />;
@@ -185,8 +217,9 @@ let createElement = (~children as _, ()) =>
                     <Step
                       color=Yellow
                       active={
-                        (s === 1 ? true : false)
-                        || appState.activeStep === index
+                        s === 1
+                          ? appState.activeStep === index ? false : true
+                          : appState.activeStep === index ? true : false
                       }
                       onClick={updateStep(index)}
                     />;
@@ -203,8 +236,9 @@ let createElement = (~children as _, ()) =>
                     <Step
                       color=White
                       active={
-                        (s === 1 ? true : false)
-                        || appState.activeStep === index
+                        s === 1
+                          ? appState.activeStep === index ? false : true
+                          : appState.activeStep === index ? true : false
                       }
                       onClick={updateStep(index)}
                     />;

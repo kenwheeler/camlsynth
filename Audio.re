@@ -68,9 +68,11 @@ let fill_ba = (ba, dispatch, appState) => {
       Array.fold_left(
         (acc, t) =>
           acc
-          +. {
-            (t.osc)#getData(mtime^) *. (t.env)#nextSample();
-          },
+          +. Array.fold_left(
+               (ac2, o) => ac2 +. o#getData(mtime^) *. (t.env)#nextSample(),
+               0.,
+               t.osc,
+             ),
         0.,
         appState.tracks,
       );

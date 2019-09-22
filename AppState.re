@@ -1,6 +1,6 @@
 type track = {
   steps: array(int),
-  osc: Osc.osc,
+  osc: array(Osc.osc),
   env: Envelope.envelope,
 };
 
@@ -32,11 +32,12 @@ let reducer = (action, state) =>
 let kickOsc = Osc.create(Osc.Sine, 27.5, 0.75);
 let kickEnv = Envelope.create(0.01, 0.25, 0.1, 0.25);
 
-let snareOsc = Osc.create(Osc.Noise, 55., 0.5);
-let snareEnv = Envelope.create(0.01, 0.1, 0.1, 0.1);
+let snareOsc = Osc.create(Osc.Noise, 55., 0.25);
+let snareEnv = Envelope.create(0.01, 0.1, 0.1, 0.2);
+let snareOsc2 = Osc.create(Osc.Sine, 55., 0.75);
 
-let hatOsc = Osc.create(Osc.Noise, 55., 0.25);
-let hatEnv = Envelope.create(0.01, 0.015, 0.015, 0.015);
+let hatOsc = Osc.create(Osc.Noise, 55., 0.2);
+let hatEnv = Envelope.create(0.01, 0.01, 0.015, 0.025);
 
 let initialAppState = {
   playing: false,
@@ -44,17 +45,17 @@ let initialAppState = {
   activeTrack: 0,
   tracks: [|
     {
-      osc: kickOsc,
+      osc: [|kickOsc|],
       env: kickEnv,
       steps: [|1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0|],
     },
     {
-      osc: snareOsc,
+      osc: [|snareOsc, snareOsc2|],
       env: snareEnv,
       steps: [|0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0|],
     },
     {
-      osc: hatOsc,
+      osc: [|hatOsc|],
       env: hatEnv,
       steps: [|0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0|],
     },

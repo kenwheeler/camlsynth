@@ -49,12 +49,12 @@ let createElement =
     let led =
       Style.[
         backgroundColor(
-          active === true ? Color.hex("#ff4444") : Color.hex("#330000"),
+          active === true ? Color.hex("#ff3333") : Color.hex("#330000"),
         ),
         border(
           ~width=2,
           ~color=
-            active === true ? Color.hex("#ff4444") : Color.hex("#330000"),
+            active === true ? Color.hex("#ff3333") : Color.hex("#330000"),
         ),
         borderRadius(5.),
         height(10),
