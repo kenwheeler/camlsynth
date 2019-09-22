@@ -14,6 +14,7 @@ type envelope = {
   enterStage: stage => unit,
   nextSample: unit => float,
   getStage: unit => stage,
+  resetLevel: unit => unit,
 };
 
 let rec find = (~i=0, a, x) =>
@@ -38,6 +39,9 @@ let create = (attack, decay, sustain, release) => {
         +. (log(endLevel) -. log(startLevel))
         /. float_of_int(lengthInSamples);
       ();
+    };
+    pub resetLevel = () => {
+      currentLevel := minimumLevel;
     };
     pub enterStage = nextStage => {
       currentStage := nextStage;

@@ -12,8 +12,8 @@ let playing = ref(false);
 
 Random.self_init();
 Portaudio.init();
-let osc1 = Osc.create(Osc.Sine, 27.5, 0.75);
-let env1 = Envelope.create(0.01, 0.25, 0.1, 0.5);
+let osc1 = Osc.create(Osc.Sine, 55., 0.75);
+let env1 = Envelope.create(0.01, 0.25, 0.1, 0.25);
 
 let deviceId = Portaudio.get_default_output_device();
 let device = Portaudio.get_device_info(deviceId);
@@ -32,13 +32,20 @@ let getStream = () => {
   stream;
 };
 
-let fill_ba = (ba, setStep) => {
+let fill_ba = (ba, setStep, stepsRef) => {
   /* time */
   /* Fill the buffer */
   for (i in 0 to bufferSize - 1) {
     if (mod_float(currentSample^, step) == 0.0) {
-      Console.log(int_of_float(currentSample^ /. step));
-      setStep(int_of_float(currentSample^ /. step));
+      let stepIndex = int_of_float(currentSample^ /. step);
+      if (stepIndex !== 0 && stepsRef^[stepIndex - 1] === 1) {
+        if (env1#getStage() === Sustain) {
+          env1#enterStage(Release);
+        };
+        let _reset = env1#nextSample();
+        env1#enterStage(Attack);
+      };
+      setStep(stepIndex);
     };
     if (currentSample^ > step *. 16.) {
       currentSample := 0.0;
@@ -46,10 +53,6 @@ let fill_ba = (ba, setStep) => {
     /* Reset mtime if it gets too big */
     if (mtime^ > Float.max_float) {
       mtime := 0.;
-    };
-
-    if (env1#getStage() === Off) {
-      env1#enterStage(Attack);
     };
 
     if (env1#getStage() === Sustain) {
@@ -74,7 +77,7 @@ let stop = stream => {
   playing := false;
   stop_stream(stream);
 };
-let play = (stream, steps, setStep) => {
+let play = (stream, setStep, stepsRef) => {
   mtime := 0.;
   playing := true;
   currentSample := 0.;
@@ -83,7 +86,7 @@ let play = (stream, steps, setStep) => {
   let ba = Genarray.create(float32, c_layout, dims);
   /* Fill the array on loop and write */
   while (playing^ === true) {
-    fill_ba(ba, setStep);
+    fill_ba(ba, setStep, stepsRef);
     Portaudio.write_stream_ba(stream, ba, 0, bufferSize);
   };
   ();

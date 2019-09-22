@@ -6,6 +6,11 @@ open Thread;
 open Portaudio;
 open Lwt;
 
+type threadArgs = {
+  setActiveStep: int => unit,
+  stepsRef: ref(array(int))
+};
+
 let component = React.component("DrumMachine");
 
 type streamParams =
@@ -15,6 +20,9 @@ let stream:
   Portaudio.stream(streamParams, streamParams, float, Bigarray.float32_elt) =
   getStream();
 
+let setActiveRef = ref((v: int) => ());
+let stepsRef = ref([|0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0|]);
+
 let createElement = (~children as _, ()) =>
   component(hooks => {
     let (steps, setSteps, hooks) =
@@ -23,16 +31,26 @@ let createElement = (~children as _, ()) =>
         hooks,
       );
     let (playing, setPlaying, hooks) = React.Hooks.state(false, hooks);
-    let (active, setActive, hooks) = React.Hooks.state(5, hooks);
+    let (active, setActive, hooks) = React.Hooks.state(-1, hooks);
+
+    let hooks = Hooks.effect(
+      Always,
+      () => {
+        setActiveRef := setActive;
+        stepsRef := steps;
+        None;
+      },
+      hooks
+    );
+
+    let setActiveStep = step => {
+      setActiveRef^(step - 1);
+    };
 
     let updateStep = (index, ()) => {
       let s = Array.copy(steps);
       s[index] = s[index] === 1 ? 0 : 1;
       setSteps(s);
-    };
-
-    let setActiveStep = step => {
-      setActive(step - 1);
     };
 
     let playToggle = () => {
@@ -43,7 +61,7 @@ let createElement = (~children as _, ()) =>
       } else {
         start_stream(stream);
         let _handle =
-          Thread.create(() => Audio.play(stream, steps, setActiveStep), ());
+          Thread.create(({setActiveStep, stepsRef}) => Audio.play(stream, setActiveStep, stepsRef), {setActiveStep, stepsRef});
         setPlaying(true);
       };
 

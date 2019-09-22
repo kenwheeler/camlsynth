@@ -1,6 +1,6 @@
 let bufferSize = 1024;
 let sampleRate = 44100.;
-let tempo = 60.;
+let tempo = 90.;
 
 let oneBeatInMilliseconds = 60000. /. tempo;
 let oneBeatInSeconds = oneBeatInMilliseconds /. 1000.;
