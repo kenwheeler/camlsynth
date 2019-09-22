@@ -4,11 +4,11 @@ open Revery.UI.Components;
 open Audio;
 open Thread;
 open Portaudio;
-open Lwt;
+open AppState;
 
 type threadArgs = {
-  setActiveStep: int => unit,
-  stepsRef: ref(array(int))
+  dispatch: action => unit,
+  appStateRef: ref(appState),
 };
 
 let component = React.component("DrumMachine");
@@ -20,49 +20,45 @@ let stream:
   Portaudio.stream(streamParams, streamParams, float, Bigarray.float32_elt) =
   getStream();
 
-let setActiveRef = ref((v: int) => ());
-let stepsRef = ref([|0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0|]);
+let appStateRef = ref(initialAppState);
 
 let createElement = (~children as _, ()) =>
   component(hooks => {
-    let (steps, setSteps, hooks) =
-      React.Hooks.state(
-        [|0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0|],
+    let (appState, dispatch, hooks) =
+      Hooks.reducer(~initialState=initialAppState, reducer, hooks);
+
+    let hooks =
+      Hooks.effect(
+        Always,
+        () => {
+          appStateRef := appState;
+          None;
+        },
         hooks,
       );
-    let (playing, setPlaying, hooks) = React.Hooks.state(false, hooks);
-    let (active, setActive, hooks) = React.Hooks.state(-1, hooks);
-
-    let hooks = Hooks.effect(
-      Always,
-      () => {
-        setActiveRef := setActive;
-        stepsRef := steps;
-        None;
-      },
-      hooks
-    );
 
     let setActiveStep = step => {
-      setActiveRef^(step - 1);
+      dispatch(SetActiveStep(step - 1));
     };
 
     let updateStep = (index, ()) => {
-      let s = Array.copy(steps);
-      s[index] = s[index] === 1 ? 0 : 1;
-      setSteps(s);
+      dispatch(UpdateStep(index));
     };
 
     let playToggle = () => {
-      if (playing) {
+      if (appState.playing) {
         setActiveStep(0);
         Audio.stop(stream);
-        setPlaying(false);
+        dispatch(SetPlaying(false));
       } else {
         start_stream(stream);
         let _handle =
-          Thread.create(({setActiveStep, stepsRef}) => Audio.play(stream, setActiveStep, stepsRef), {setActiveStep, stepsRef});
-        setPlaying(true);
+          Thread.create(
+            ({dispatch, appStateRef}) =>
+              Audio.play(stream, dispatch, appStateRef),
+            {dispatch, appStateRef},
+          );
+        dispatch(SetPlaying(true));
       };
 
       ();
@@ -133,6 +129,8 @@ let createElement = (~children as _, ()) =>
         justifyContent(`SpaceBetween),
       ];
 
+    let currentSteps = appState.tracks[appState.activeTrack].steps;
+
     (
       hooks,
       <View style=containerStyle>
@@ -141,95 +139,79 @@ let createElement = (~children as _, ()) =>
           <Text style=subTextStyle text="ML-808" />
         </View>
         <View style=innerStyle>
-          <PlayButton playing onClick=playToggle />
+          <PlayButton playing={appState.playing} onClick=playToggle />
           <View style=stepContainer>
             <View style=stepGroup>
-              <Step
-                color=Red
-                active={(steps[0] === 1 ? true : false) || active === 0}
-                onClick={updateStep(0)}
-              />
-              <Step
-                color=Red
-                active={(steps[1] === 1 ? true : false) || active === 1}
-                onClick={updateStep(1)}
-              />
-              <Step
-                color=Red
-                active={(steps[2] === 1 ? true : false) || active === 2}
-                onClick={updateStep(2)}
-              />
-              <Step
-                color=Red
-                active={(steps[3] === 1 ? true : false) || active === 3}
-                onClick={updateStep(3)}
-              />
+              ...{Array.to_list(
+                Array.mapi(
+                  (i, s) => {
+                    let index = 0 + i;
+                    <Step
+                      color=Red
+                      active={
+                        (s === 1 ? true : false)
+                        || appState.activeStep === index
+                      }
+                      onClick={updateStep(index)}
+                    />;
+                  },
+                  Array.sub(currentSteps, 0, 4),
+                ),
+              )}
             </View>
             <View style=stepGroup>
-              <Step
-                color=Orange
-                active={(steps[4] === 1 ? true : false) || active === 4}
-                onClick={updateStep(4)}
-              />
-              <Step
-                color=Orange
-                active={(steps[5] === 1 ? true : false) || active === 5}
-                onClick={updateStep(5)}
-              />
-              <Step
-                color=Orange
-                active={(steps[6] === 1 ? true : false) || active === 6}
-                onClick={updateStep(6)}
-              />
-              <Step
-                color=Orange
-                active={(steps[7] === 1 ? true : false) || active === 7}
-                onClick={updateStep(7)}
-              />
+              ...{Array.to_list(
+                Array.mapi(
+                  (i, s) => {
+                    let index = 4 + i;
+                    <Step
+                      color=Orange
+                      active={
+                        (s === 1 ? true : false)
+                        || appState.activeStep === index
+                      }
+                      onClick={updateStep(index)}
+                    />;
+                  },
+                  Array.sub(currentSteps, 4, 4),
+                ),
+              )}
             </View>
             <View style=stepGroup>
-              <Step
-                color=Yellow
-                active={(steps[8] === 1 ? true : false) || active === 8}
-                onClick={updateStep(8)}
-              />
-              <Step
-                color=Yellow
-                active={(steps[9] === 1 ? true : false) || active === 9}
-                onClick={updateStep(9)}
-              />
-              <Step
-                color=Yellow
-                active={(steps[10] === 1 ? true : false) || active === 10}
-                onClick={updateStep(10)}
-              />
-              <Step
-                color=Yellow
-                active={(steps[11] === 1 ? true : false) || active === 11}
-                onClick={updateStep(11)}
-              />
+              ...{Array.to_list(
+                Array.mapi(
+                  (i, s) => {
+                    let index = 8 + i;
+                    <Step
+                      color=Yellow
+                      active={
+                        (s === 1 ? true : false)
+                        || appState.activeStep === index
+                      }
+                      onClick={updateStep(index)}
+                    />;
+                  },
+                  Array.sub(currentSteps, 8, 4),
+                ),
+              )}
             </View>
             <View style=stepGroup>
-              <Step
-                color=White
-                active={(steps[12] === 1 ? true : false) || active === 12}
-                onClick={updateStep(12)}
-              />
-              <Step
-                color=White
-                active={(steps[13] === 1 ? true : false) || active === 13}
-                onClick={updateStep(13)}
-              />
-              <Step
-                color=White
-                active={(steps[14] === 1 ? true : false) || active === 14}
-                onClick={updateStep(14)}
-              />
-              <Step
-                color=White
-                active={(steps[15] === 1 ? true : false) || active === 15}
-                onClick={updateStep(15)}
-              />
+              ...{Array.to_list(
+                Array.mapi(
+                  (i, s) => {
+                    let index = 12 + i;
+                    <Step
+                      color=White
+                      active={
+                        (s === 1 ? true : false)
+                        || appState.activeStep === index
+                      }
+                      onClick={updateStep(index)}
+                    />;
+                  },
+                  Array.sub(currentSteps, 12, 4),
+                ),
+              )}
             </View>
           </View>
         </View>

@@ -1,6 +1,7 @@
 open Portaudio;
 open Bigarray;
 open Settings;
+open AppState;
 
 /* Time reference */
 let mtime = ref(0.0);
@@ -32,20 +33,20 @@ let getStream = () => {
   stream;
 };
 
-let fill_ba = (ba, setStep, stepsRef) => {
+let fill_ba = (ba, dispatch, appState) => {
   /* time */
   /* Fill the buffer */
   for (i in 0 to bufferSize - 1) {
     if (mod_float(currentSample^, step) == 0.0) {
       let stepIndex = int_of_float(currentSample^ /. step);
-      if (stepIndex !== 0 && stepsRef^[stepIndex - 1] === 1) {
-        if (env1#getStage() === Sustain) {
-          env1#enterStage(Release);
-        };
-        let _reset = env1#nextSample();
-        env1#enterStage(Attack);
-      };
-      setStep(stepIndex);
+      Array.iter(
+        t =>
+          if (stepIndex !== 0 && t.steps[stepIndex - 1] === 1) {
+            (t.env)#enterStage(Attack);
+          },
+        appState.tracks,
+      );
+      dispatch(SetActiveStep(stepIndex));
     };
     if (currentSample^ > step *. 16.) {
       currentSample := 0.0;
@@ -55,10 +56,24 @@ let fill_ba = (ba, setStep, stepsRef) => {
       mtime := 0.;
     };
 
-    if (env1#getStage() === Sustain) {
-      env1#enterStage(Release);
-    };
-    let data = osc1#getData(mtime^) *. env1#nextSample();
+    Array.iter(
+      t =>
+        if ((t.env)#getStage() === Sustain) {
+          (t.env)#enterStage(Release);
+        },
+      appState.tracks,
+    );
+
+    let data =
+      Array.fold_left(
+        (acc, t) =>
+          acc
+          +. {
+            (t.osc)#getData(mtime^) *. (t.env)#nextSample();
+          },
+        0.,
+        appState.tracks,
+      );
 
     /* Increment time by sample */
     mtime := mtime^ +. mdelta;
@@ -77,7 +92,7 @@ let stop = stream => {
   playing := false;
   stop_stream(stream);
 };
-let play = (stream, setStep, stepsRef) => {
+let play = (stream, dispatch, appStateRef) => {
   mtime := 0.;
   playing := true;
   currentSample := 0.;
@@ -86,7 +101,7 @@ let play = (stream, setStep, stepsRef) => {
   let ba = Genarray.create(float32, c_layout, dims);
   /* Fill the array on loop and write */
   while (playing^ === true) {
-    fill_ba(ba, setStep, stepsRef);
+    fill_ba(ba, dispatch, appStateRef^);
     Portaudio.write_stream_ba(stream, ba, 0, bufferSize);
   };
   ();
