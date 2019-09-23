@@ -13,8 +13,6 @@ let playing = ref(false);
 
 Random.self_init();
 Portaudio.init();
-let osc1 = Osc.create(Osc.Sine, 55., 0.75);
-let env1 = Envelope.create(0.01, 0.25, 0.1, 0.25);
 
 let deviceId = Portaudio.get_default_output_device();
 let device = Portaudio.get_device_info(deviceId);
@@ -46,10 +44,12 @@ let fill_ba = (ba, dispatch, appState) => {
       let stepIndex = int_of_float(currentSample^ /. step);
       /* if the matched step is active */
       Array.iter(
-        t =>
+        t => {
+          let params = [|0., t.attack, t.decay, t.sustain, t.release|];
           if (stepIndex !== 0 && t.steps[stepIndex - 1] === 1) {
-            (t.env)#enterStage(Attack);
-          },
+            (t.env)#enterStage(Attack, params);
+          };
+        },
         appState.tracks,
       );
       dispatch(SetActiveStep(stepIndex));
@@ -63,10 +63,12 @@ let fill_ba = (ba, dispatch, appState) => {
     };
 
     Array.iter(
-      t =>
+      t => {
+        let params = [|0., t.attack, t.decay, t.sustain, t.release|];
         if ((t.env)#getStage() === Sustain) {
-          (t.env)#enterStage(Release);
-        },
+          (t.env)#enterStage(Release, params);
+        };
+      },
       appState.tracks,
     );
 
@@ -75,7 +77,12 @@ let fill_ba = (ba, dispatch, appState) => {
         (acc, t) =>
           acc
           +. Array.fold_left(
-               (ac2, o) => ac2 +. o#getData(mtime^) *. (t.env)#nextSample(),
+               (ac2, o) => {
+                 let params = [|0., t.attack, t.decay, t.sustain, t.release|];
+                 ac2
+                 +. Osc.getData(o, t.freq, t.gain, mtime^)
+                 *. (t.env)#nextSample(params);
+               },
                0.,
                t.osc,
              ),

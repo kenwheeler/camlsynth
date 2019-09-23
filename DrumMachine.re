@@ -85,13 +85,29 @@ let createElement = (~children as _, ()) =>
 
     let innerStyle =
       Style.[
-        flexGrow(1),
+        flexGrow(0),
         alignSelf(`Stretch),
         flexDirection(`Row),
         alignItems(`FlexEnd),
         backgroundColor(Color.hex("#888888")),
         margin(20),
+        height(100),
         borderRadius(5.),
+        border(~width=1, ~color=Color.hex("#888888")),
+      ];
+    let settingsContainer =
+      Style.[
+        flexGrow(1),
+        alignSelf(`Stretch),
+        flexDirection(`Row),
+        alignItems(`Center),
+        paddingHorizontal(10),
+        backgroundColor(Color.hex("#888888")),
+        marginHorizontal(20),
+        marginBottom(20),
+        marginTop(-10),
+        borderRadius(5.),
+        justifyContent(`SpaceBetween),
         border(~width=1, ~color=Color.hex("#888888")),
       ];
     let headerStyle =
@@ -108,6 +124,12 @@ let createElement = (~children as _, ()) =>
         color(Color.hex("#F16F20")),
         fontFamily("Roboto-Regular.ttf"),
         fontSize(24),
+      ];
+    let sliderLabelStyle =
+      Style.[
+        color(Colors.black),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(12),
       ];
     let subTextStyle =
       Style.[
@@ -252,6 +274,80 @@ let createElement = (~children as _, ()) =>
                 ),
               )}
             </View>
+          </View>
+        </View>
+        <View style=settingsContainer>
+          <View>
+            <Text style=sliderLabelStyle text="ATTACK" />
+            <Slider
+              onValueChanged={v => dispatch(SetAttack(v))}
+              value={appState.tracks[appState.activeTrack].attack}
+              maximumValue=0.99
+              minimumValue=0.01
+              thumbColor={Color.hex("#25231E")}
+              minimumTrackColor={Color.hex("#F16F20")}
+              maximumTrackColor=Colors.white
+            />
+          </View>
+          <View>
+            <Text style=sliderLabelStyle text="DECAY" />
+            <Slider
+              onValueChanged={v => dispatch(SetDecay(v))}
+              value={appState.tracks[appState.activeTrack].decay}
+              maximumValue=0.99
+              minimumValue=0.01
+              thumbColor={Color.hex("#25231E")}
+              minimumTrackColor={Color.hex("#F16F20")}
+              maximumTrackColor=Colors.white
+            />
+          </View>
+          <View>
+            <Text style=sliderLabelStyle text="SUSTAIN" />
+            <Slider
+              onValueChanged={v => dispatch(SetSustain(v))}
+              value={appState.tracks[appState.activeTrack].sustain}
+              maximumValue=0.99
+              minimumValue=0.01
+              thumbColor={Color.hex("#25231E")}
+              minimumTrackColor={Color.hex("#F16F20")}
+              maximumTrackColor=Colors.white
+            />
+          </View>
+          <View>
+            <Text style=sliderLabelStyle text="RELEASE" />
+            <Slider
+              onValueChanged={v => dispatch(SetRelease(v))}
+              value={appState.tracks[appState.activeTrack].release}
+              maximumValue=0.99
+              minimumValue=0.01
+              thumbColor={Color.hex("#25231E")}
+              minimumTrackColor={Color.hex("#F16F20")}
+              maximumTrackColor=Colors.white
+            />
+          </View>
+          <View>
+            <Text style=sliderLabelStyle text="TONE" />
+            <Slider
+              onValueChanged={v => dispatch(SetFreq(v))}
+              value={appState.tracks[appState.activeTrack].freq}
+              maximumValue=261.63
+              minimumValue=16.35
+              thumbColor={Color.hex("#25231E")}
+              minimumTrackColor={Color.hex("#F16F20")}
+              maximumTrackColor=Colors.white
+            />
+          </View>
+          <View>
+            <Text style=sliderLabelStyle text="GAIN" />
+            <Slider
+              onValueChanged={v => dispatch(SetGain(v))}
+              value={appState.tracks[appState.activeTrack].gain}
+              maximumValue=0.75
+              minimumValue=0.01
+              thumbColor={Color.hex("#25231E")}
+              minimumTrackColor={Color.hex("#F16F20")}
+              maximumTrackColor=Colors.white
+            />
           </View>
         </View>
       </View>,

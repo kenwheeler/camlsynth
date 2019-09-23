@@ -7,12 +7,14 @@ type stage =
   | Sustain
   | Release;
 
+type params = array(float);
+
 let stageOrder = [|Off, Attack, Decay, Sustain, Release|];
 
 type envelope = {
   .
-  enterStage: stage => unit,
-  nextSample: unit => float,
+  enterStage: (stage, params) => unit,
+  nextSample: params => float,
   getStage: unit => stage,
   resetLevel: unit => unit,
 };
@@ -24,7 +26,7 @@ let rec find = (~i=0, a, x) =>
     find(~i=i + 1, a, x);
   };
 
-let create = (attack, decay, sustain, release) => {
+let create = () => {
   let ret: envelope = {
     val minimumLevel = 0.0001;
     val currentStage = ref(Off);
@@ -32,7 +34,6 @@ let create = (attack, decay, sustain, release) => {
     val multiplier = ref(1.0);
     val currentSampleIndex = ref(0);
     val nextStageSampleIndex = ref(0);
-    val stageValue = [|0., attack, decay, sustain, release|];
     pri calculateMultiplier = (startLevel, endLevel, lengthInSamples) => {
       multiplier :=
         1.0
@@ -43,7 +44,7 @@ let create = (attack, decay, sustain, release) => {
     pub resetLevel = () => {
       currentLevel := minimumLevel;
     };
-    pub enterStage = nextStage => {
+    pub enterStage = (nextStage, params) => {
       currentStage := nextStage;
       currentSampleIndex := 0;
       nextStageSampleIndex :=
@@ -53,7 +54,7 @@ let create = (attack, decay, sustain, release) => {
           | Sustain => 0
           | _ =>
             let idx = find(stageOrder, nextStage, ~i=0);
-            int_of_float(stageValue[idx] *. sampleRate);
+            int_of_float(params[idx] *. sampleRate);
           }
         );
       switch (nextStage) {
@@ -67,11 +68,11 @@ let create = (attack, decay, sustain, release) => {
         currentLevel := 1.0;
         this#calculateMultiplier(
           currentLevel^,
-          max(stageValue[3], minimumLevel),
+          max(params[3], minimumLevel),
           nextStageSampleIndex^,
         );
       | Sustain =>
-        currentLevel := stageValue[3];
+        currentLevel := params[3];
         multiplier := 1.0;
       | Release =>
         this#calculateMultiplier(
@@ -82,7 +83,7 @@ let create = (attack, decay, sustain, release) => {
       };
       ();
     };
-    pub nextSample = () => {
+    pub nextSample = params => {
       switch (currentStage^) {
       | Off => ()
       | Sustain => ()
@@ -90,7 +91,7 @@ let create = (attack, decay, sustain, release) => {
         if (currentSampleIndex^ == nextStageSampleIndex^) {
           let currentStageIndex = find(stageOrder, currentStage^, ~i=0);
           let newStage = (currentStageIndex + 1) mod 5;
-          this#enterStage(stageOrder[newStage]);
+          this#enterStage(stageOrder[newStage], params);
         };
         currentLevel := currentLevel^ *. multiplier^;
         currentSampleIndex := currentSampleIndex^ + 1;

@@ -1,7 +1,13 @@
 type track = {
   steps: array(int),
-  osc: array(Osc.osc),
+  osc: array(Osc.wave),
   env: Envelope.envelope,
+  mutable freq: float,
+  mutable gain: float,
+  mutable attack: float,
+  mutable decay: float,
+  mutable sustain: float,
+  mutable release: float,
 };
 
 type appState = {
@@ -17,7 +23,13 @@ type action =
   | SetActiveStep(int)
   | UpdateStep(int)
   | UpdateTempo(float)
-  | SetActiveTrack(int);
+  | SetActiveTrack(int)
+  | SetGain(float)
+  | SetFreq(float)
+  | SetAttack(float)
+  | SetDecay(float)
+  | SetSustain(float)
+  | SetRelease(float);
 
 let reducer = (action, state) =>
   switch (action) {
@@ -25,22 +37,42 @@ let reducer = (action, state) =>
   | SetActiveStep(n) => {...state, activeStep: n}
   | SetActiveTrack(n) => {...state, activeTrack: n}
   | UpdateTempo(n) => {...state, tempo: n}
+  | SetGain(n) =>
+    let t = Array.copy(state.tracks);
+    let s = t[state.activeTrack];
+    s.gain = n;
+    {...state, tracks: t};
+  | SetFreq(n) =>
+    let t = Array.copy(state.tracks);
+    let s = t[state.activeTrack];
+    s.freq = n;
+    {...state, tracks: t};
+  | SetSustain(n) =>
+    let t = Array.copy(state.tracks);
+    let s = t[state.activeTrack];
+    s.sustain = n;
+    {...state, tracks: t};
+  | SetAttack(n) =>
+    let t = Array.copy(state.tracks);
+    let s = t[state.activeTrack];
+    s.attack = n;
+    {...state, tracks: t};
+  | SetDecay(n) =>
+    let t = Array.copy(state.tracks);
+    let s = t[state.activeTrack];
+    s.decay = n;
+    {...state, tracks: t};
+  | SetRelease(n) =>
+    let t = Array.copy(state.tracks);
+    let s = t[state.activeTrack];
+    s.release = n;
+    {...state, tracks: t};
   | UpdateStep(u) =>
     let t = Array.copy(state.tracks);
     let s = t[state.activeTrack].steps;
     s[u] = s[u] === 1 ? 0 : 1;
     {...state, tracks: t};
   };
-
-let kickOsc = Osc.create(Osc.Sine, 27.5, 0.75);
-let kickEnv = Envelope.create(0.01, 0.25, 0.1, 0.25);
-
-let snareOsc = Osc.create(Osc.Noise, 55., 0.25);
-let snareEnv = Envelope.create(0.01, 0.1, 0.1, 0.2);
-let snareOsc2 = Osc.create(Osc.Sine, 55., 0.75);
-
-let hatOsc = Osc.create(Osc.Noise, 55., 0.2);
-let hatEnv = Envelope.create(0.01, 0.01, 0.015, 0.025);
 
 let initialAppState = {
   playing: false,
@@ -49,18 +81,36 @@ let initialAppState = {
   activeTrack: 0,
   tracks: [|
     {
-      osc: [|kickOsc|],
-      env: kickEnv,
+      osc: [|Osc.Sine|],
+      freq: 27.5,
+      gain: 0.75,
+      attack: 0.01,
+      decay: 0.25,
+      sustain: 0.1,
+      release: 0.25,
+      env: Envelope.create(),
       steps: [|1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0|],
     },
     {
-      osc: [|snareOsc, snareOsc2|],
-      env: snareEnv,
+      osc: [|Osc.Sine, Osc.Noise|],
+      freq: 55.,
+      gain: 0.75,
+      attack: 0.01,
+      decay: 0.1,
+      sustain: 0.1,
+      release: 0.2,
+      env: Envelope.create(),
       steps: [|0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0|],
     },
     {
-      osc: [|hatOsc|],
-      env: hatEnv,
+      osc: [|Osc.Noise|],
+      freq: 55.,
+      gain: 0.25,
+      attack: 0.01,
+      decay: 0.01,
+      sustain: 0.015,
+      release: 0.025,
+      env: Envelope.create(),
       steps: [|0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0|],
     },
   |],

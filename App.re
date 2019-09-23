@@ -12,7 +12,7 @@ let init = app => {
         ...WindowCreateOptions.default,
         resizable: false,
         width: 800,
-        height: 200,
+        height: 250,
         backgroundColor: Color.hex("#25231E"),
       },
     );
