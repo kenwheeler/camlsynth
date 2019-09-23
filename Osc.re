@@ -20,9 +20,9 @@ let getData = (mode: wave, freq: float, gain: float, mtime: float) => {
   let doublePi = Float.pi *. 2.;
 
   switch (mode) {
-  | Sine => gain *. sin(2. *. doublePi *. freq *. mtime)
-  | Square => gain *. (lt < hpt ? 1.0 : (-1.0))
-  | Saw => gain *. (lt /. fpt *. 2. -. 1.0)
-  | Noise => gain *. 1. -. Random.float(2.)
+  | Sine => sin(2. *. doublePi *. freq *. mtime) *. gain
+  | Square => (lt < hpt ? 1.0 : (-1.0)) *. gain
+  | Saw => (lt /. fpt *. 2. -. 1.0) *. gain
+  | Noise => 1. -. Random.float(2.) *. gain
   };
 };

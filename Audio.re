@@ -47,7 +47,7 @@ let fill_ba = (ba, dispatch, appState) => {
         t => {
           let params = [|0., t.attack, t.decay, t.sustain, t.release|];
           if (stepIndex !== 0 && t.steps[stepIndex - 1] === 1) {
-            (t.env)#enterStage(Attack, params);
+            Envelope.enterStage(t.env, Attack, params);
           };
         },
         appState.tracks,
@@ -65,8 +65,8 @@ let fill_ba = (ba, dispatch, appState) => {
     Array.iter(
       t => {
         let params = [|0., t.attack, t.decay, t.sustain, t.release|];
-        if ((t.env)#getStage() === Sustain) {
-          (t.env)#enterStage(Release, params);
+        if (t.env.currentStage === Sustain) {
+          Envelope.enterStage(t.env, Release, params);
         };
       },
       appState.tracks,
@@ -86,7 +86,7 @@ let fill_ba = (ba, dispatch, appState) => {
                      t.gain *. o.gain,
                      mtime^,
                    )
-                *. (t.env)#nextSample(params);
+                *. Envelope.nextSample(t.env, params);
               },
               0.,
               t.osc,

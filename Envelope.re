@@ -12,11 +12,21 @@ type params = array(float);
 let stageOrder = [|Off, Attack, Decay, Sustain, Release|];
 
 type envelope = {
-  .
-  enterStage: (stage, params) => unit,
-  nextSample: params => float,
-  getStage: unit => stage,
-  resetLevel: unit => unit,
+  minimumLevel: float,
+  mutable currentStage: stage,
+  mutable currentLevel: float,
+  mutable multiplier: float,
+  mutable currentSampleIndex: int,
+  mutable nextStageSampleIndex: int,
+};
+
+let create = () => {
+  minimumLevel: 0.0001,
+  currentStage: Off,
+  currentLevel: 0.0001,
+  multiplier: 0.1,
+  currentSampleIndex: 0,
+  nextStageSampleIndex: 0,
 };
 
 let rec find = (~i=0, a, x) =>
@@ -26,79 +36,66 @@ let rec find = (~i=0, a, x) =>
     find(~i=i + 1, a, x);
   };
 
-let create = () => {
-  let ret: envelope = {
-    val minimumLevel = 0.0001;
-    val currentStage = ref(Off);
-    val currentLevel = ref(0.0001);
-    val multiplier = ref(1.0);
-    val currentSampleIndex = ref(0);
-    val nextStageSampleIndex = ref(0);
-    pri calculateMultiplier = (startLevel, endLevel, lengthInSamples) => {
-      multiplier :=
-        1.0
-        +. (log(endLevel) -. log(startLevel))
-        /. float_of_int(lengthInSamples);
-      ();
-    };
-    pub resetLevel = () => {
-      currentLevel := minimumLevel;
-    };
-    pub enterStage = (nextStage, params) => {
-      currentStage := nextStage;
-      currentSampleIndex := 0;
-      nextStageSampleIndex :=
-        (
-          switch (nextStage) {
-          | Off => 0
-          | Sustain => 0
-          | _ =>
-            let idx = find(stageOrder, nextStage, ~i=0);
-            int_of_float(params[idx] *. sampleRate);
-          }
-        );
-      switch (nextStage) {
-      | Off =>
-        currentLevel := 0.;
-        multiplier := 1.0;
-      | Attack =>
-        currentLevel := minimumLevel;
-        this#calculateMultiplier(currentLevel^, 1.0, nextStageSampleIndex^);
-      | Decay =>
-        currentLevel := 1.0;
-        this#calculateMultiplier(
-          currentLevel^,
-          max(params[3], minimumLevel),
-          nextStageSampleIndex^,
-        );
-      | Sustain =>
-        currentLevel := params[3];
-        multiplier := 1.0;
-      | Release =>
-        this#calculateMultiplier(
-          currentLevel^,
-          minimumLevel,
-          nextStageSampleIndex^,
-        )
-      };
-      ();
-    };
-    pub nextSample = params => {
-      switch (currentStage^) {
-      | Off => ()
-      | Sustain => ()
-      | _ =>
-        if (currentSampleIndex^ == nextStageSampleIndex^) {
-          let currentStageIndex = find(stageOrder, currentStage^, ~i=0);
-          let newStage = (currentStageIndex + 1) mod 5;
-          this#enterStage(stageOrder[newStage], params);
-        };
-        currentLevel := currentLevel^ *. multiplier^;
-        currentSampleIndex := currentSampleIndex^ + 1;
-      };
-      currentLevel^;
-    };
-    pub getStage = () => currentStage^
+let calculateMultiplier = (env, startLevel, endLevel, lengthInSamples) => {
+  env.multiplier =
+    1.0
+    +. (log(endLevel) -. log(startLevel))
+    /. float_of_int(lengthInSamples);
+};
+
+let enterStage = (env, nextStage, params) => {
+  env.currentStage = nextStage;
+  env.currentSampleIndex = 0;
+  env.nextStageSampleIndex = (
+    switch (nextStage) {
+    | Off => 0
+    | Sustain => 0
+    | _ =>
+      let idx = find(stageOrder, nextStage, ~i=0);
+      int_of_float(params[idx] *. sampleRate);
+    }
+  );
+  switch (nextStage) {
+  | Off =>
+    env.currentLevel = 0.;
+    env.multiplier = 1.0;
+  | Attack =>
+    env.currentLevel = env.minimumLevel;
+    calculateMultiplier(env, env.currentLevel, 1.0, env.nextStageSampleIndex);
+  | Decay =>
+    env.currentLevel = 1.0;
+    calculateMultiplier(
+      env,
+      env.currentLevel,
+      max(params[3], env.minimumLevel),
+      env.nextStageSampleIndex,
+    );
+  | Sustain =>
+    env.currentLevel = params[3];
+    env.multiplier = 1.0;
+  | Release =>
+    calculateMultiplier(
+      env,
+      env.currentLevel,
+      env.minimumLevel,
+      env.nextStageSampleIndex,
+    )
   };
-  ret;
+  ();
+};
+
+let nextSample = (env, params) => {
+  switch (env.currentStage) {
+  | Off => ()
+  | Sustain => ()
+  | _ =>
+    if (env.currentSampleIndex == env.nextStageSampleIndex) {
+      let currentStageIndex = find(stageOrder, env.currentStage, ~i=0);
+      let newStage = (currentStageIndex + 1) mod 5;
+      enterStage(env, stageOrder[newStage], params);
+    };
+    env.currentLevel = env.currentLevel *. env.multiplier;
+    env.currentSampleIndex = env.currentSampleIndex + 1;
+  };
+  env.currentLevel;
 };

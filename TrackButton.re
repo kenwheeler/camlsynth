@@ -18,7 +18,7 @@ let createElement =
     let wrapperStyle =
       Style.[
         backgroundColor(bgColor),
-        width(75),
+        width(50),
         flexGrow(1),
         alignItems(`Center),
         justifyContent(`Center),

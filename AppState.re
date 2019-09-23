@@ -91,10 +91,10 @@ let initialAppState = {
   tracks: [|
     {
       osc: [|{wave: Osc.Sine, offset: 1.0, gain: 1.0}|],
-      freq: 27.5,
-      gain: 0.75,
+      freq: 21.83,
+      gain: 1.0,
       attack: 0.01,
-      decay: 0.25,
+      decay: 0.2,
       sustain: 0.1,
       release: 0.25,
       env: Envelope.create(),
@@ -103,18 +103,19 @@ let initialAppState = {
     },
     {
       osc: [|
-        {wave: Osc.Sine, offset: 1.0, gain: 1.0},
-        {wave: Osc.Noise, offset: 1.0, gain: 0.5},
+        {wave: Osc.Sine, offset: (-1.0), gain: 1.0},
+        {wave: Osc.Noise, offset: 1.0, gain: 0.75},
       |],
-      freq: 55.,
+      freq: 65.,
       gain: 0.75,
       attack: 0.01,
       decay: 0.1,
       sustain: 0.1,
-      release: 0.2,
+      release: 0.5,
       env: Envelope.create(),
       steps: [|0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0|],
-      filter: None,
+      filter:
+        Some(Filter.create(Filter.LowPass, 9000. /. sampleRate, 1.0, 0.0)),
     },
     {
       osc: [|
@@ -128,13 +129,45 @@ let initialAppState = {
       freq: 55.,
       gain: 0.25,
       attack: 0.01,
-      decay: 0.1,
+      decay: 0.2,
       sustain: 0.1,
-      release: 0.1,
+      release: 0.9,
       env: Envelope.create(),
       steps: [|0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0|],
       filter:
-        Some(Filter.create(Filter.HighPass, 7000. /. sampleRate, 1.0, 0.0)),
+        Some(Filter.create(Filter.HighPass, 8000. /. sampleRate, 1.0, 0.0)),
+    },
+    {
+      osc: [|
+        {wave: Osc.Square, offset: 6.0, gain: 0.25},
+        {wave: Osc.Saw, offset: 4.0, gain: 0.25},
+      |],
+      freq: 130.81,
+      gain: 0.25,
+      attack: 0.01,
+      decay: 0.05,
+      sustain: 0.1,
+      release: 1.0,
+      env: Envelope.create(),
+      steps: [|0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0|],
+      filter:
+        Some(Filter.create(Filter.LowPass, 5000. /. sampleRate, 1.0, 0.0)),
+    },
+    {
+      osc: [|
+        {wave: Osc.Noise, offset: 1.0, gain: 0.05},
+        {wave: Osc.Sine, offset: 3.0, gain: 0.75},
+      |],
+      freq: 130.81,
+      gain: 0.5,
+      attack: 0.01,
+      decay: 0.05,
+      sustain: 0.1,
+      release: 0.5,
+      env: Envelope.create(),
+      steps: [|0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0|],
+      filter:
+        Some(Filter.create(Filter.HighPass, 1200. /. sampleRate, 1.0, 0.0)),
     },
   |],
 };

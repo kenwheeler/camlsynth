@@ -178,17 +178,27 @@ let createElement = (~children as _, ()) =>
             <TrackButton
               onClick={updateTrack(0)}
               active={appState.activeTrack == 0}
-              text="KICK"
+              text="KCK"
             />
             <TrackButton
               onClick={updateTrack(1)}
               active={appState.activeTrack == 1}
-              text="SNARE"
+              text="SNR"
             />
             <TrackButton
               onClick={updateTrack(2)}
               active={appState.activeTrack == 2}
               text="HAT"
+            />
+            <TrackButton
+              onClick={updateTrack(3)}
+              active={appState.activeTrack == 3}
+              text="CBL"
+            />
+            <TrackButton
+              onClick={updateTrack(4)}
+              active={appState.activeTrack == 4}
+              text="CLV"
             />
           </View>
           <TempoControl onChange=updateTempo tempo={appState.tempo} />
@@ -282,7 +292,7 @@ let createElement = (~children as _, ()) =>
             <Slider
               onValueChanged={v => dispatch(SetAttack(v))}
               value={appState.tracks[appState.activeTrack].attack}
-              maximumValue=0.99
+              maximumValue=0.5
               minimumValue=0.01
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
@@ -318,7 +328,7 @@ let createElement = (~children as _, ()) =>
             <Slider
               onValueChanged={v => dispatch(SetRelease(v))}
               value={appState.tracks[appState.activeTrack].release}
-              maximumValue=0.99
+              maximumValue=2.0
               minimumValue=0.01
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
@@ -330,7 +340,7 @@ let createElement = (~children as _, ()) =>
             <Slider
               onValueChanged={v => dispatch(SetFreq(v))}
               value={appState.tracks[appState.activeTrack].freq}
-              maximumValue=261.63
+              maximumValue=130.81
               minimumValue=16.35
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
@@ -342,8 +352,8 @@ let createElement = (~children as _, ()) =>
             <Slider
               onValueChanged={v => dispatch(SetGain(v))}
               value={appState.tracks[appState.activeTrack].gain}
-              maximumValue=0.75
-              minimumValue=0.01
+              maximumValue=1.5
+              minimumValue=0.0001
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
               maximumTrackColor=Colors.white
