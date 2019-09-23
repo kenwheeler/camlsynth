@@ -49,6 +49,10 @@ let createElement = (~children as _, ()) =>
       dispatch(SetActiveTrack(track));
     };
 
+    let updateTempo = (tempo, ()) => {
+      dispatch(UpdateTempo(tempo));
+    };
+
     let playToggle = () => {
       if (appState.playing) {
         setActiveStep(0);
@@ -165,6 +169,7 @@ let createElement = (~children as _, ()) =>
               text="HAT"
             />
           </View>
+          <TempoControl onChange=updateTempo tempo={appState.tempo} />
           <Text style=textHeaderStyle text="Reason Composer" />
           <Text style=subTextStyle text="ML-808" />
         </View>

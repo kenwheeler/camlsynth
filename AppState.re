@@ -6,6 +6,7 @@ type track = {
 
 type appState = {
   playing: bool,
+  tempo: float,
   activeStep: int,
   tracks: array(track),
   activeTrack: int,
@@ -15,6 +16,7 @@ type action =
   | SetPlaying(bool)
   | SetActiveStep(int)
   | UpdateStep(int)
+  | UpdateTempo(float)
   | SetActiveTrack(int);
 
 let reducer = (action, state) =>
@@ -22,6 +24,7 @@ let reducer = (action, state) =>
   | SetPlaying(p) => {...state, playing: p}
   | SetActiveStep(n) => {...state, activeStep: n}
   | SetActiveTrack(n) => {...state, activeTrack: n}
+  | UpdateTempo(n) => {...state, tempo: n}
   | UpdateStep(u) =>
     let t = Array.copy(state.tracks);
     let s = t[state.activeTrack].steps;
@@ -41,6 +44,7 @@ let hatEnv = Envelope.create(0.01, 0.01, 0.015, 0.025);
 
 let initialAppState = {
   playing: false,
+  tempo: 90.,
   activeStep: (-1),
   activeTrack: 0,
   tracks: [|

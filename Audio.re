@@ -35,10 +35,16 @@ let getStream = () => {
 
 let fill_ba = (ba, dispatch, appState) => {
   /* time */
+  let beatMs = 60000. /. appState.tempo;
+  let beatS = beatMs /. 1000.;
+  let stepSec = beatS /. 4.;
+  let step = floor(stepSec *. sampleRate);
   /* Fill the buffer */
   for (i in 0 to bufferSize - 1) {
+    /* if the step matches */
     if (mod_float(currentSample^, step) == 0.0) {
       let stepIndex = int_of_float(currentSample^ /. step);
+      /* if the matched step is active */
       Array.iter(
         t =>
           if (stepIndex !== 0 && t.steps[stepIndex - 1] === 1) {
