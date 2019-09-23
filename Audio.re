@@ -74,18 +74,31 @@ let fill_ba = (ba, dispatch, appState) => {
 
     let data =
       Array.fold_left(
-        (acc, t) =>
+        (acc, t) => {
+          let d =
+            Array.fold_left(
+              (ac2, o) => {
+                let params = [|0., t.attack, t.decay, t.sustain, t.release|];
+                ac2
+                +. Osc.getData(
+                     o.wave,
+                     t.freq *. o.offset,
+                     t.gain *. o.gain,
+                     mtime^,
+                   )
+                *. (t.env)#nextSample(params);
+              },
+              0.,
+              t.osc,
+            );
           acc
-          +. Array.fold_left(
-               (ac2, o) => {
-                 let params = [|0., t.attack, t.decay, t.sustain, t.release|];
-                 ac2
-                 +. Osc.getData(o, t.freq, t.gain, mtime^)
-                 *. (t.env)#nextSample(params);
-               },
-               0.,
-               t.osc,
-             ),
+          +. (
+            switch (t.filter) {
+            | None => d
+            | Some(f) => Filter.process(f, d)
+            }
+          );
+        },
         0.,
         appState.tracks,
       );
