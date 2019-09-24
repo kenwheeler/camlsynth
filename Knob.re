@@ -2,6 +2,7 @@
  * Knob.re
  *
  * Simple <Knob /> component, based on the <Slider /> component from Revery / react-native
+ * Based on: https://github.com/revery-ui/revery/blob/master/src/UI_Components/Slider.re
  */
 
 open Revery;
@@ -15,7 +16,7 @@ let noop = () => ();
 type valueChangedFunction = float => unit;
 let noopValueChanged = _f => ();
 
-let component = React.component("Slider");
+let component = React.component("Knob");
 
 let createElement =
     (
@@ -25,7 +26,6 @@ let createElement =
       ~maximumValue=1.,
       ~value=0.,
       ~size=64,
-      ~thumbColor=Colors.gray,
       (),
     ) =>
   component(hooks => {
@@ -77,6 +77,9 @@ let createElement =
       setActive(false);
     };
 
+    // We had an 'Always' hook that sets mouse capture - meaning we takeover
+    // handling the mouse movement / mouseup events while the gesture is in progress 
+    // (until 'sliderComplete' is called, or the component unmounts).
     let hooks =
       Hooks.effect(
         Always,
@@ -148,6 +151,7 @@ let createElement =
     let sideThumbPosition =
       int_of_float(float_of_int(size - sideThumbSize) *. normalizedValue);
 
+    // We'll show a helper slider while the slide-gesture is active
     let sideSlider =
       <Positioned top=0 right=(-2) bottom=0>
         <Positioned top=sideThumbPosition right=0>
