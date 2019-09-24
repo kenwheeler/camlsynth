@@ -31,13 +31,13 @@ let createElement =
   component(hooks => {
     // We keep a reference to the 'slider' bounding box for calculations with the mouse position
     // This is kind of a carry-over from Revery's slider that I ported over - it's important
-    // to have the bounds for a slider, because you want to match up the mouse position with 
-    // the boundaries. We could get away with less here - just knowing the start position 
+    // to have the bounds for a slider, because you want to match up the mouse position with
+    // the boundaries. We could get away with less here - just knowing the start position
     // where the 'mousedown' happened, and calculated based on the latest mouse position would
     // be sufficient.
     let (slideRef, setSlideRefOption, hooks) = Hooks.state(None, hooks);
 
-    // Active is used so we can show some custom UI while the 
+    // Active is used so we can show some custom UI while the
     let (isActive, setActive, hooks) = Hooks.state(false, hooks);
 
     // Initial value is used to detect if the 'value' parameter ever changes
@@ -135,30 +135,28 @@ let createElement =
 
     let sliderOpacity = isActive ? 1.0 : 0.8;
 
-    let normalizedValue = (v -. minimumValue) /. (maximumValue -. minimumValue);
+    let normalizedValue =
+      (v -. minimumValue) /. (maximumValue -. minimumValue);
 
     let style =
-      Style.[
-        width(size),
-        height(size),
-        cursor(MouseCursors.pointer),
-      ];
+      Style.[width(size), height(size), cursor(MouseCursors.pointer)];
 
     let width = size;
     let height = size;
 
     let sideThumbSize = 2;
-    let sideThumbPosition = int_of_float(float_of_int(size - sideThumbSize) *. normalizedValue);
+    let sideThumbPosition =
+      int_of_float(float_of_int(size - sideThumbSize) *. normalizedValue);
 
-    let sideSlider = 
-      <Positioned top=0 right={-2} bottom=0>
+    let sideSlider =
+      <Positioned top=0 right=(-2) bottom=0>
         <Positioned top=sideThumbPosition right=0>
           <Container width=8 height=sideThumbSize color=Colors.white />
         </Positioned>
         <Container width=2 height=size color=Colors.white />
       </Positioned>;
-    
-    let sliderVisualization = isActive ? sideSlider: React.empty;
+
+    let sliderVisualization = isActive ? sideSlider : React.empty;
 
     (
       hooks,
@@ -169,14 +167,20 @@ let createElement =
               <Image src="knob-outer2.png" width height />
             </Positioned>
             <Positioned top=0 left=0>
-              <Image src="knob-inner.png" 
-                  width=64 
-                  height=64  
-                  style=Style.[
-                    transform([Transform.RotateZ(Angle.from_radians((normalizedValue *. 5.2) -.2.6))])
-                  ]/>
+              <Image
+                src="knob-inner.png"
+                width=64
+                height=64
+                style=Style.[
+                  transform([
+                    Transform.RotateZ(
+                      Angle.from_radians(normalizedValue *. 5.2 -. 2.6),
+                    ),
+                  ]),
+                ]
+              />
             </Positioned>
-            {sliderVisualization}
+            sliderVisualization
           </Stack>
         </View>
       </Opacity>,
