@@ -288,75 +288,69 @@ let createElement = (~children as _, ()) =>
         </View>
         <View style=settingsContainer>
           <View>
-            <Text style=sliderLabelStyle text="ATTACK" />
-            <Slider
+            <Center>
+              <Text style=sliderLabelStyle text="ATTACK" />
+            </Center>
+            <Knob
               onValueChanged={v => dispatch(SetAttack(v))}
               value={appState.tracks[appState.activeTrack].attack}
               maximumValue=0.5
               minimumValue=0.01
-              thumbColor={Color.hex("#25231E")}
-              minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
-            <Text style=sliderLabelStyle text="DECAY" />
-            <Slider
+            <Center>
+              <Text style=sliderLabelStyle text="DECAY" />
+            </Center>
+            <Knob
               onValueChanged={v => dispatch(SetDecay(v))}
               value={appState.tracks[appState.activeTrack].decay}
               maximumValue=0.99
               minimumValue=0.01
-              thumbColor={Color.hex("#25231E")}
-              minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
-            <Text style=sliderLabelStyle text="SUSTAIN" />
-            <Slider
+            <Center>
+              <Text style=sliderLabelStyle text="SUSTAIN" />
+            </Center>
+            <Knob
               onValueChanged={v => dispatch(SetSustain(v))}
               value={appState.tracks[appState.activeTrack].sustain}
               maximumValue=0.99
               minimumValue=0.01
-              thumbColor={Color.hex("#25231E")}
-              minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
-            <Text style=sliderLabelStyle text="RELEASE" />
-            <Slider
+            <Center>
+              <Text style=sliderLabelStyle text="RELEASE" />
+            </Center>
+            <Knob
               onValueChanged={v => dispatch(SetRelease(v))}
               value={appState.tracks[appState.activeTrack].release}
               maximumValue=2.0
               minimumValue=0.01
-              thumbColor={Color.hex("#25231E")}
-              minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
-            <Text style=sliderLabelStyle text="TONE" />
-            <Slider
+            <Center>
+              <Text style=sliderLabelStyle text="TONE" />
+            </Center>
+            <Knob
               onValueChanged={v => dispatch(SetFreq(v))}
               value={appState.tracks[appState.activeTrack].freq}
               maximumValue=130.81
               minimumValue=16.35
-              thumbColor={Color.hex("#25231E")}
-              minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
-            <Text style=sliderLabelStyle text="GAIN" />
-            <Slider
+            <Center>
+              <Text style=sliderLabelStyle text="GAIN" />
+            </Center>
+            <Knob
               onValueChanged={v => dispatch(SetGain(v))}
               value={appState.tracks[appState.activeTrack].gain}
               maximumValue=1.5
               minimumValue=0.0001
-              thumbColor={Color.hex("#25231E")}
-              minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
         </View>
