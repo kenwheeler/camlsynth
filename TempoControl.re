@@ -19,7 +19,7 @@ let createElement =
         flexGrow(1),
         marginLeft(5),
         justifyContent(`FlexStart),
-        marginTop(-6),
+        marginTop(-8),
       ];
 
     let buttonStyle =
@@ -43,15 +43,24 @@ let createElement =
         color(Color.hex("#ff2222")),
         fontFamily("digital-7.ttf"),
         fontSize(28),
-        top(14),
+        top(15),
       ];
 
     let lcdWrapper =
       Style.[
         backgroundColor(Color.hex("#330000")),
         width(50),
-        height(30),
+        height(35),
         alignItems(`Center),
+        border(~width=2, ~color=Color.rgba(1., 1., 1., 0.25)),
+      ];
+
+    let shadow =
+      Style.[
+        height(5),
+        width(25),
+        backgroundColor(Color.hex("#9a9880")),
+        marginHorizontal(4),
       ];
 
     (
@@ -61,6 +70,7 @@ let createElement =
           <View style=buttonStyle>
             <Text style=textButtonStyle text="-" />
           </View>
+          <View style=shadow />
         </Clickable>
         <View style=lcdWrapper>
           <Text style=lcdText text={string_of_int(int_of_float(tempo))} />
@@ -69,6 +79,7 @@ let createElement =
           <View style=buttonStyle>
             <Text style=textButtonStyle text="+" />
           </View>
+          <View style=shadow />
         </Clickable>
       </View>,
     );

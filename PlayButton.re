@@ -15,12 +15,10 @@ let createElement =
     let wrapperStyle =
       Style.[
         backgroundColor(Color.hex("#EAE7C6")),
-        margin(16),
         width(100),
         flexGrow(1),
         alignItems(`Center),
         justifyContent(`Center),
-        border(~width=3, ~color=Color.hex("#bdbaa0")),
       ];
 
     let textHeaderStyle =
@@ -31,13 +29,24 @@ let createElement =
         marginTop(2),
       ];
 
+    let shadow =
+      Style.[
+        height(playing ? 0 : 5),
+        width(100),
+        backgroundColor(Color.hex("#9a9880")),
+      ];
+
+    let clickableStyle =
+      Style.[margin(16), border(~width=3, ~color=Color.hex("#bdbaa0"))];
+
     let textContent = playing ? "STOP" : "START";
     (
       hooks,
-      <Clickable onClick>
+      <Clickable onClick style=clickableStyle>
         <View style=wrapperStyle>
           <Text style=textHeaderStyle text=textContent />
         </View>
+        <View style=shadow />
       </Clickable>,
     );
   });

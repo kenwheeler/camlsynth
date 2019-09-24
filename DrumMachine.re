@@ -296,7 +296,7 @@ let createElement = (~children as _, ()) =>
               minimumValue=0.01
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor=Colors.white
+              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
@@ -308,7 +308,7 @@ let createElement = (~children as _, ()) =>
               minimumValue=0.01
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor=Colors.white
+              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
@@ -320,7 +320,7 @@ let createElement = (~children as _, ()) =>
               minimumValue=0.01
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor=Colors.white
+              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
@@ -332,7 +332,7 @@ let createElement = (~children as _, ()) =>
               minimumValue=0.01
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor=Colors.white
+              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
@@ -344,7 +344,7 @@ let createElement = (~children as _, ()) =>
               minimumValue=16.35
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor=Colors.white
+              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
           <View>
@@ -356,7 +356,7 @@ let createElement = (~children as _, ()) =>
               minimumValue=0.0001
               thumbColor={Color.hex("#25231E")}
               minimumTrackColor={Color.hex("#F16F20")}
-              maximumTrackColor=Colors.white
+              maximumTrackColor={Color.hex("#EAE7C6")}
             />
           </View>
         </View>
