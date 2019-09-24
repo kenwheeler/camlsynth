@@ -1,5 +1,5 @@
 {
-  "checksum": "aa8c99b81c40ded67237d08dee4e4a8b",
+  "checksum": "c5553e77c8def5e7e09ff4a9dba05518",
   "root": "revery-quick-start@link-dev:./package.json",
   "node": {
     "revery-quick-start@link-dev:./package.json": {
@@ -13,9 +13,9 @@
       },
       "overrides": [],
       "dependencies": [
-        "revery@0.27.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
-        "@opam/portaudio@github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0@d41d8cd9",
-        "@opam/dune@opam:1.7.3@e23fe0a7"
+        "revery@0.27.0@d41d8cd9",
+        "ocaml-portaudio@github:bryphe/ocaml-portaudio#c849b06@d41d8cd9",
+        "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.3@e23fe0a7"
       ],
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/merlin@opam:3.2.2@e3edecdd"
@@ -245,6 +245,21 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "ocaml-portaudio@github:bryphe/ocaml-portaudio#c849b06@d41d8cd9": {
+      "id": "ocaml-portaudio@github:bryphe/ocaml-portaudio#c849b06@d41d8cd9",
+      "name": "ocaml-portaudio",
+      "version": "github:bryphe/ocaml-portaudio#c849b06",
+      "source": {
+        "type": "install",
+        "source": [ "github:bryphe/ocaml-portaudio#c849b06" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1004@d41d8cd9", "esy-portaudio@19.0.6001@d41d8cd9",
+        "@opam/dune@opam:1.7.3@e23fe0a7"
+      ],
+      "devDependencies": []
+    },
     "ocaml@4.7.1004@d41d8cd9": {
       "id": "ocaml@4.7.1004@d41d8cd9",
       "name": "ocaml",
@@ -274,6 +289,20 @@
         "refmterr@3.2.2@d41d8cd9", "@opam/dune@opam:1.7.3@e23fe0a7",
         "@esy-ocaml/reason@3.5.0@d41d8cd9"
       ],
+      "devDependencies": []
+    },
+    "esy-portaudio@19.0.6001@d41d8cd9": {
+      "id": "esy-portaudio@19.0.6001@d41d8cd9",
+      "name": "esy-portaudio",
+      "version": "19.0.6001",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/esy-portaudio/-/esy-portaudio-19.0.6001.tgz#sha1:01e4ea5a7ea216a1b03fbd9a3b3e94daf54f41a0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
       "devDependencies": []
     },
     "esy-harfbuzz@1.9.1005@d41d8cd9": {
@@ -776,25 +805,6 @@
         "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.3@e23fe0a7"
       ]
     },
-    "@opam/portaudio@github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0@d41d8cd9": {
-      "id":
-        "@opam/portaudio@github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0@d41d8cd9",
-      "name": "@opam/portaudio",
-      "version":
-        "github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0",
-      "source": {
-        "type": "install",
-        "source": [
-          "github:jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [ "ocaml@4.7.1004@d41d8cd9" ]
-    },
     "@opam/ocplib-endian@opam:1.0@aa720242": {
       "id": "@opam/ocplib-endian@opam:1.0@aa720242",
       "name": "@opam/ocplib-endian",
@@ -992,20 +1002,20 @@
         "@opam/dune@opam:1.7.3@e23fe0a7"
       ]
     },
-    "@opam/menhir@opam:20190626@bbeb8953": {
-      "id": "@opam/menhir@opam:20190626@bbeb8953",
+    "@opam/menhir@opam:20190924@004407ff": {
+      "id": "@opam/menhir@opam:20190924@004407ff",
       "name": "@opam/menhir",
-      "version": "opam:20190626",
+      "version": "opam:20190924",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/78/783961f8d124449a1a335cc8e50f013f#md5:783961f8d124449a1a335cc8e50f013f",
-          "archive:https://gitlab.inria.fr/fpottier/menhir/repository/20190626/archive.tar.gz#md5:783961f8d124449a1a335cc8e50f013f"
+          "archive:https://opam.ocaml.org/cache/md5/67/677f1997fb73177d5a00fa1b8d61c3ef#md5:677f1997fb73177d5a00fa1b8d61c3ef",
+          "archive:https://gitlab.inria.fr/fpottier/menhir/repository/20190924/archive.tar.gz#md5:677f1997fb73177d5a00fa1b8d61c3ef"
         ],
         "opam": {
           "name": "menhir",
-          "version": "20190626",
-          "path": "esy.lock/opam/menhir.20190626"
+          "version": "20190924",
+          "path": "esy.lock/opam/menhir.20190924"
         }
       },
       "overrides": [],
@@ -1833,7 +1843,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/menhir@opam:20190626@bbeb8953",
+        "ocaml@4.7.1004@d41d8cd9", "@opam/menhir@opam:20190924@004407ff",
         "@opam/jbuilder@opam:transition@58bdfe0a",
         "@opam/easy-format@opam:1.3.1@9abfd4ed",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
@@ -1900,7 +1910,7 @@
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocaml-migrate-parsetree@opam:1.3.1@8bfb3f95",
         "@opam/merlin-extend@opam:0.4@64c45329",
-        "@opam/menhir@opam:20190626@bbeb8953",
+        "@opam/menhir@opam:20190924@004407ff",
         "@opam/dune@opam:1.7.3@e23fe0a7"
       ],
       "devDependencies": []

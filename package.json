@@ -14,10 +14,10 @@
     "ocaml": "~4.7.0",
     "revery": "0.27.0",
     "@opam/dune": "1.7.3",
-    "@opam/portaudio": "*"
+    "ocaml-portaudio": "*"
   },
   "resolutions": {
-    "@opam/portaudio": "jordwalke/ocaml-portaudio:portaudio.opam#f592215935c51b11a3c0b969a5185ddc6c39cfa0",
+    "ocaml-portaudio": "github:bryphe/ocaml-portaudio#c849b06",
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
