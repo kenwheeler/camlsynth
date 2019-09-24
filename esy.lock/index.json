@@ -1,5 +1,5 @@
 {
-  "checksum": "b24293ff88815c3ee2a95a0f5ad6f056",
+  "checksum": "c5553e77c8def5e7e09ff4a9dba05518",
   "root": "revery-quick-start@link-dev:./package.json",
   "node": {
     "revery-quick-start@link-dev:./package.json": {
@@ -13,9 +13,9 @@
       },
       "overrides": [],
       "dependencies": [
-        "revery@0.27.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
-        "@opam/portaudio@github:bryphe/ocaml-portaudio#8af41a7@d41d8cd9",
-        "@opam/dune@opam:1.7.3@e23fe0a7"
+        "revery@0.27.0@d41d8cd9",
+        "ocaml-portaudio@github:bryphe/ocaml-portaudio#c849b06@d41d8cd9",
+        "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.3@e23fe0a7"
       ],
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/merlin@opam:3.2.2@e3edecdd"
@@ -243,6 +243,21 @@
       },
       "overrides": [],
       "dependencies": [],
+      "devDependencies": []
+    },
+    "ocaml-portaudio@github:bryphe/ocaml-portaudio#c849b06@d41d8cd9": {
+      "id": "ocaml-portaudio@github:bryphe/ocaml-portaudio#c849b06@d41d8cd9",
+      "name": "ocaml-portaudio",
+      "version": "github:bryphe/ocaml-portaudio#c849b06",
+      "source": {
+        "type": "install",
+        "source": [ "github:bryphe/ocaml-portaudio#c849b06" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1004@d41d8cd9", "esy-portaudio@19.0.6001@d41d8cd9",
+        "@opam/dune@opam:1.7.3@e23fe0a7"
+      ],
       "devDependencies": []
     },
     "ocaml@4.7.1004@d41d8cd9": {
@@ -789,21 +804,6 @@
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.3@e23fe0a7"
       ]
-    },
-    "@opam/portaudio@github:bryphe/ocaml-portaudio#8af41a7@d41d8cd9": {
-      "id": "@opam/portaudio@github:bryphe/ocaml-portaudio#8af41a7@d41d8cd9",
-      "name": "@opam/portaudio",
-      "version": "github:bryphe/ocaml-portaudio#8af41a7",
-      "source": {
-        "type": "install",
-        "source": [ "github:bryphe/ocaml-portaudio#8af41a7" ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "esy-portaudio@19.0.6001@d41d8cd9",
-        "@opam/dune@opam:1.7.3@e23fe0a7"
-      ],
-      "devDependencies": []
     },
     "@opam/ocplib-endian@opam:1.0@aa720242": {
       "id": "@opam/ocplib-endian@opam:1.0@aa720242",
