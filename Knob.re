@@ -78,7 +78,7 @@ let createElement =
     };
 
     // We had an 'Always' hook that sets mouse capture - meaning we takeover
-    // handling the mouse movement / mouseup events while the gesture is in progress 
+    // handling the mouse movement / mouseup events while the gesture is in progress
     // (until 'sliderComplete' is called, or the component unmounts).
     let hooks =
       Hooks.effect(
@@ -168,7 +168,7 @@ let createElement =
         <View onMouseDown style ref={r => setSlideRef(r)}>
           <Stack width height>
             <Positioned top=0 left=0>
-              <Image src="knob-outer2.png" width height />
+              <Image src="knob-outer.png" width height />
             </Positioned>
             <Positioned top=0 left=0>
               <Image

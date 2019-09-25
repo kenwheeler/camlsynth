@@ -102,6 +102,7 @@ let createElement = (~children as _, ()) =>
         flexDirection(`Row),
         alignItems(`Center),
         paddingHorizontal(10),
+        paddingVertical(5),
         backgroundColor(Color.hex("#888888")),
         marginHorizontal(20),
         marginBottom(20),
@@ -288,70 +289,58 @@ let createElement = (~children as _, ()) =>
         </View>
         <View style=settingsContainer>
           <View>
-            <Center>
-              <Text style=sliderLabelStyle text="ATTACK" />
-            </Center>
             <Knob
               onValueChanged={v => dispatch(SetAttack(v))}
               value={appState.tracks[appState.activeTrack].attack}
               maximumValue=0.5
               minimumValue=0.01
             />
+            <Center> <Text style=sliderLabelStyle text="ATTACK" /> </Center>
           </View>
           <View>
-            <Center>
-              <Text style=sliderLabelStyle text="DECAY" />
-            </Center>
             <Knob
               onValueChanged={v => dispatch(SetDecay(v))}
               value={appState.tracks[appState.activeTrack].decay}
               maximumValue=0.99
               minimumValue=0.01
             />
+            <Center> <Text style=sliderLabelStyle text="DECAY" /> </Center>
           </View>
           <View>
-            <Center>
-              <Text style=sliderLabelStyle text="SUSTAIN" />
-            </Center>
             <Knob
               onValueChanged={v => dispatch(SetSustain(v))}
               value={appState.tracks[appState.activeTrack].sustain}
               maximumValue=0.99
               minimumValue=0.01
             />
+            <Center> <Text style=sliderLabelStyle text="SUSTAIN" /> </Center>
           </View>
           <View>
-            <Center>
-              <Text style=sliderLabelStyle text="RELEASE" />
-            </Center>
             <Knob
               onValueChanged={v => dispatch(SetRelease(v))}
               value={appState.tracks[appState.activeTrack].release}
               maximumValue=2.0
               minimumValue=0.01
             />
+            <Center> <Text style=sliderLabelStyle text="RELEASE" /> </Center>
           </View>
           <View>
-            <Center>
-              <Text style=sliderLabelStyle text="TONE" />
-            </Center>
             <Knob
               onValueChanged={v => dispatch(SetFreq(v))}
               value={appState.tracks[appState.activeTrack].freq}
               maximumValue=130.81
               minimumValue=16.35
             />
+            <Center> <Text style=sliderLabelStyle text="TONE" /> </Center>
           </View>
           <View>
-            <Center>
-              <Text style=sliderLabelStyle text="GAIN" />
-            </Center>
             <Knob
               onValueChanged={v => dispatch(SetGain(v))}
               value={appState.tracks[appState.activeTrack].gain}
               maximumValue=1.5
               minimumValue=0.0001
             />
+            <Center> <Text style=sliderLabelStyle text="GAIN" /> </Center>
           </View>
         </View>
       </View>,
