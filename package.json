@@ -14,7 +14,8 @@
     "ocaml": "~4.7.0",
     "revery": "0.27.0",
     "@opam/dune": "1.7.3",
-    "ocaml-portaudio": "*"
+    "ocaml-portaudio": "*",
+    "@opam/reason": "*"
   },
   "resolutions": {
     "ocaml-portaudio": "github:bryphe/ocaml-portaudio#c849b06",
@@ -25,7 +26,8 @@
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be",
     "rebez": "github:jchavarri/rebez#46cbc183",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
-    "@opam/merlin-extend": "0.4"
+    "@opam/merlin-extend": "0.4",
+    "@opam/reason": "let-def/reason:reason.opam#bd07255b6674c3dfae8edb037b6865f8490abaff"
   },
   "scripts": {
     "format": "bash -c \"refmt --in-place *.re\"",
