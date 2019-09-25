@@ -99,7 +99,8 @@ let initialAppState = {
       release: 0.25,
       env: Envelope.create(),
       steps: [|1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0|],
-      filter: None,
+      filter:
+        Some(Filter.create(Filter.LowPass, 3000. /. sampleRate, 1.0, 0.0)),
     },
     {
       osc: [|

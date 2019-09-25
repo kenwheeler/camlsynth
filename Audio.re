@@ -13,6 +13,7 @@ let playing = ref(false);
 
 let delay = Delay.create(0.25, 0.25);
 let filter = Filter.create(Filter.LowPass, 1000. /. sampleRate, 1.0, 0.0);
+let bitcrusher = Bitcrusher.create(16., 16);
 
 Random.self_init();
 Portaudio.init();
@@ -110,8 +111,9 @@ let fill_ba = (ba, dispatch, appState) => {
         0.,
         appState.tracks,
       );
-    /* |> Delay.process(delay)
-       |> Filter.process(filter);  <-- pipe Signal chain lol */
+    /* |> Bitcrusher.process(bitcrusher)
+       |> Delay.process(delay); */
+    /* |> Filter.process(filter);  */
 
     /* Increment time by sample */
     mtime := mtime^ +. mdelta;
