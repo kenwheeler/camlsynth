@@ -11,6 +11,9 @@ let currentSample = ref(0.0);
 
 let playing = ref(false);
 
+let delay = Delay.create(0.25, 0.25);
+let filter = Filter.create(Filter.LowPass, 1000. /. sampleRate, 1.0, 0.0);
+
 Random.self_init();
 Portaudio.init();
 
@@ -74,11 +77,14 @@ let fill_ba = (ba, dispatch, appState) => {
 
     let data =
       Array.fold_left(
+        /* Combine tracks */
         (acc, t) => {
           let d =
             Array.fold_left(
+              /* Combine oscillators */
               (ac2, o) => {
                 let params = [|0., t.attack, t.decay, t.sustain, t.release|];
+                /* Add osc data */
                 ac2
                 +. Osc.getData(
                      o.wave,
@@ -86,11 +92,13 @@ let fill_ba = (ba, dispatch, appState) => {
                      t.gain *. o.gain,
                      mtime^,
                    )
+                /* Apply envelope */
                 *. Envelope.nextSample(t.env, params);
               },
               0.,
               t.osc,
             );
+          /* return mixed track with filter applied */
           acc
           +. (
             switch (t.filter) {
@@ -102,6 +110,8 @@ let fill_ba = (ba, dispatch, appState) => {
         0.,
         appState.tracks,
       );
+    /* |> Delay.process(delay)
+       |> Filter.process(filter);  <-- pipe Signal chain lol */
 
     /* Increment time by sample */
     mtime := mtime^ +. mdelta;
