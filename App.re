@@ -12,12 +12,12 @@ let init = app => {
         ...WindowCreateOptions.default,
         resizable: false,
         width: 800,
-        height: 300,
+        height: 475,
         backgroundColor: Color.hex("#25231E"),
       },
     );
 
-  let element = <DrumMachine />;
+  let element = <MainUI />;
 
   let _ = UI.start(win, element);
   ();

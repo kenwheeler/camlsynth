@@ -25,6 +25,9 @@ type appState = {
   activeStep: int,
   tracks: array(track),
   activeTrack: int,
+  bitcrusherEnabled: bool,
+  delayEnabled: bool,
+  filterEnabled: bool,
 };
 
 type action =
@@ -38,7 +41,10 @@ type action =
   | SetAttack(float)
   | SetDecay(float)
   | SetSustain(float)
-  | SetRelease(float);
+  | SetRelease(float)
+  | ToggleBitcrusherEnabled(bool)
+  | ToggleDelayEnabled(bool)
+  | ToggleFilterEnabled(bool);
 
 let reducer = (action, state) =>
   switch (action) {
@@ -46,6 +52,9 @@ let reducer = (action, state) =>
   | SetActiveStep(n) => {...state, activeStep: n}
   | SetActiveTrack(n) => {...state, activeTrack: n}
   | UpdateTempo(n) => {...state, tempo: n}
+  | ToggleBitcrusherEnabled(e) => {...state, bitcrusherEnabled: e}
+  | ToggleDelayEnabled(e) => {...state, delayEnabled: e}
+  | ToggleFilterEnabled(e) => {...state, filterEnabled: e}
   | SetGain(n) =>
     let t = Array.copy(state.tracks);
     let s = t[state.activeTrack];
@@ -88,6 +97,9 @@ let initialAppState = {
   tempo: 90.,
   activeStep: (-1),
   activeTrack: 0,
+  bitcrusherEnabled: false,
+  delayEnabled: false,
+  filterEnabled: false,
   tracks: [|
     {
       osc: [|{wave: Osc.Sine, offset: 1.0, gain: 1.0}|],
