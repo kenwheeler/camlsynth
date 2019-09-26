@@ -1,5 +1,3 @@
-open Settings;
-
 type osc = {
   .
   freq: float,

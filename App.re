@@ -1,8 +1,4 @@
 open Revery;
-open Revery.Math;
-open Revery.UI;
-open Revery.UI.Components;
-open Step;
 let init = app => {
   let win =
     App.createWindow(

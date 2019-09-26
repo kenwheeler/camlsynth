@@ -1,6 +1,7 @@
 (executable
     (name App)
     (package App)
+    (js_of_ocaml (javascript_files stubs.js))
     (public_name App)
     (libraries
         bigarray
@@ -9,3 +10,8 @@
         portaudio
         threads.posix
             ))
+ 
+(install
+    (section bin)
+    (package AppJs)
+    (files App.bc.js))
