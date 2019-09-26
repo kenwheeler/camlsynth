@@ -1,7 +1,7 @@
 (executable
     (name App)
     (package App)
-    (public_name ML808)
+    (public_name App)
     (libraries
         bigarray
         reglfw
