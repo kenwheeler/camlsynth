@@ -2,7 +2,6 @@ open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 open Audio;
-//open Thread;
 open Portaudio;
 open AppState;
 
@@ -92,9 +91,15 @@ let createElement = (~children as _, ()) =>
         backgroundColor(Color.hex("#888888")),
         margin(20),
         height(100),
-        //borderRadius(5.),
         border(~width=1, ~color=Color.hex("#888888")),
       ];
+
+    // REVERY BUG: borderRadius is not working correctly in WebGL builds
+    let innerStyle = switch(Revery.Environment.webGL) {
+    | true => innerStyle
+    | false => Style.[borderRadius(5.), ...innerStyle];
+    }
+
     let settingsContainer =
       Style.[
         flexGrow(1),
@@ -107,10 +112,16 @@ let createElement = (~children as _, ()) =>
         marginHorizontal(20),
         marginBottom(20),
         marginTop(-10),
-        //borderRadius(5.),
         justifyContent(`SpaceBetween),
         border(~width=1, ~color=Color.hex("#888888")),
       ];
+
+    // REVERY BUG: borderRadius is not working correctly in WebGL builds
+    let settingsContainer = switch(Revery.Environment.webGL) {
+    | true => settingsContainer
+    | false => Style.[borderRadius(5.), ...settingsContainer];
+    };
+
     let headerStyle =
       Style.[
         flexDirection(`Row),

@@ -56,11 +56,17 @@ let createElement =
           ~color=
             active === true ? Color.hex("#ff3333") : Color.hex("#330000"),
         ),
-        //borderRadius(5.),
         height(10),
         width(10),
         alignSelf(`Center),
       ];
+    
+    // REVERY BUG: borderRadius is not working correctly in WebGL builds
+    let led = switch(Revery.Environment.webGL) {
+    | true => led
+    | false => Style.[borderRadius(5.), ...led];
+    };
+
     (
       hooks,
       <Clickable style=wrapperStyle onClick>

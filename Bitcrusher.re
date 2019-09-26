@@ -1,5 +1,3 @@
-//open Settings;
-
 type bitcrusher = {
   bitDepth: float,
   downSampling: int,
