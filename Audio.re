@@ -11,10 +11,6 @@ let currentSample = ref(0.0);
 
 let playing = ref(false);
 
-let delay = Delay.create(0.25, 0.25);
-let filter = Filter.create(Filter.LowPass, 4000. /. sampleRate, 1.0, 0.0);
-let bitcrusher = Bitcrusher.create(16., 12);
-
 let passthrough = d => d;
 
 Random.self_init();
@@ -76,10 +72,11 @@ let getData = (appState, mtime) =>
   )
   /* Apply master effects if enabled */
   |> (
-    appState.bitcrusherEnabled ? Bitcrusher.process(bitcrusher) : passthrough
+    appState.bitcrusherEnabled
+      ? Bitcrusher.process(appState.bitcrusher) : passthrough
   )
-  |> (appState.delayEnabled ? Delay.process(delay) : passthrough)
-  |> (appState.filterEnabled ? Filter.process(filter) : passthrough);
+  |> (appState.delayEnabled ? Delay.process(appState.delay) : passthrough)
+  |> (appState.filterEnabled ? Filter.process(appState.filter) : passthrough);
 
 /* Method that fills Bigarray with audio data */
 let fill_ba = (ba, dispatch, appState) => {

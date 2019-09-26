@@ -28,6 +28,9 @@ type appState = {
   bitcrusherEnabled: bool,
   delayEnabled: bool,
   filterEnabled: bool,
+  bitcrusher: Bitcrusher.bitcrusher,
+  mutable filter: Filter.filter,
+  delay: Delay.delay,
 };
 
 type action =
@@ -44,7 +47,12 @@ type action =
   | SetRelease(float)
   | ToggleBitcrusherEnabled(bool)
   | ToggleDelayEnabled(bool)
-  | ToggleFilterEnabled(bool);
+  | ToggleFilterEnabled(bool)
+  | SetBitcrusherBitrate(float)
+  | SetBitcrusherSampling(int)
+  | SetFilter(Filter.filter)
+  | SetDelayDuration(float)
+  | SetDelayGain(float);
 
 let reducer = (action, state) =>
   switch (action) {
@@ -55,6 +63,35 @@ let reducer = (action, state) =>
   | ToggleBitcrusherEnabled(e) => {...state, bitcrusherEnabled: e}
   | ToggleDelayEnabled(e) => {...state, delayEnabled: e}
   | ToggleFilterEnabled(e) => {...state, filterEnabled: e}
+  | SetBitcrusherBitrate(b) => {
+      ...state,
+      bitcrusher: {
+        ...state.bitcrusher,
+        bitDepth: floor(b),
+      },
+    }
+  | SetBitcrusherSampling(b) => {
+      ...state,
+      bitcrusher: {
+        ...state.bitcrusher,
+        downSampling: b,
+      },
+    }
+  | SetDelayDuration(d) => {
+      ...state,
+      delay: {
+        ...state.delay,
+        duration: d,
+      },
+    }
+  | SetDelayGain(d) => {
+      ...state,
+      delay: {
+        ...state.delay,
+        gain: d,
+      },
+    }
+  | SetFilter(c) => {...state, filter: c}
   | SetGain(n) =>
     let t = Array.copy(state.tracks);
     let s = t[state.activeTrack];
@@ -100,6 +137,9 @@ let initialAppState = {
   bitcrusherEnabled: false,
   delayEnabled: false,
   filterEnabled: false,
+  bitcrusher: Bitcrusher.create(16., 12),
+  delay: Delay.create(0.25, 0.25),
+  filter: Filter.create(Filter.LowPass, 4000. /. sampleRate, 1.0, 0.0),
   tracks: [|
     {
       osc: [|{wave: Osc.Sine, offset: 1.0, gain: 1.0}|],

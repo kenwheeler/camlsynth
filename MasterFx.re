@@ -2,7 +2,7 @@ open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 open AppState;
-
+open Settings;
 let component = React.component("MasterFx");
 
 let createElement =
@@ -26,7 +26,7 @@ let createElement =
         marginBottom(20),
         marginTop(-10),
         borderRadius(5.),
-        height(100),
+        height(120),
         justifyContent(`FlexStart),
         border(~width=1, ~color=Color.hex("#888888")),
       ];
@@ -55,7 +55,7 @@ let createElement =
     let panelsStyle =
       Style.[
         flexGrow(1),
-        margin(4),
+        marginHorizontal(4),
         alignSelf(`Stretch),
         flexDirection(`Row),
         justifyContent(`SpaceBetween),
@@ -75,6 +75,7 @@ let createElement =
         flexDirection(`Row),
         flexGrow(1),
         justifyContent(`FlexStart),
+        alignItems(`Center),
         marginBottom(4),
       ];
 
@@ -82,7 +83,7 @@ let createElement =
       Style.[
         flexDirection(`Row),
         flexGrow(1),
-        alignItems(`FlexStart),
+        alignItems(`Center),
         justifyContent(`SpaceAround),
         backgroundColor(Color.rgba(0., 0., 0., 0.25)),
         border(~width=2, ~color=Color.rgba(0., 0., 0., 0.25)),
@@ -118,10 +119,12 @@ let createElement =
             <View style=paramWrapper>
               <View>
                 <Knob
-                  onValueChanged={v => parentDispatch(SetRelease(v))}
-                  value={appState.tracks[appState.activeTrack].release}
-                  maximumValue=2.0
-                  minimumValue=0.01
+                  onValueChanged={v =>
+                    parentDispatch(SetBitcrusherBitrate(v))
+                  }
+                  value={appState.bitcrusher.bitDepth}
+                  maximumValue=32.
+                  minimumValue=2.
                 />
                 <Center>
                   <Text style=sliderLabelStyle text="BIT DEPTH" />
@@ -129,10 +132,12 @@ let createElement =
               </View>
               <View>
                 <Knob
-                  onValueChanged={v => parentDispatch(SetRelease(v))}
-                  value={appState.tracks[appState.activeTrack].release}
-                  maximumValue=2.0
-                  minimumValue=0.01
+                  onValueChanged={v =>
+                    parentDispatch(SetBitcrusherSampling(int_of_float(v)))
+                  }
+                  value={float_of_int(appState.bitcrusher.downSampling)}
+                  maximumValue=64.
+                  minimumValue=1.
                 />
                 <Center>
                   <Text style=sliderLabelStyle text="DSAMPLE" />
@@ -155,18 +160,18 @@ let createElement =
             <View style=paramWrapper>
               <View>
                 <Knob
-                  onValueChanged={v => parentDispatch(SetRelease(v))}
-                  value={appState.tracks[appState.activeTrack].release}
-                  maximumValue=2.0
+                  onValueChanged={v => parentDispatch(SetDelayDuration(v))}
+                  value={appState.delay.duration}
+                  maximumValue=0.5
                   minimumValue=0.01
                 />
                 <Center> <Text style=sliderLabelStyle text="DELAY" /> </Center>
               </View>
               <View>
                 <Knob
-                  onValueChanged={v => parentDispatch(SetRelease(v))}
-                  value={appState.tracks[appState.activeTrack].release}
-                  maximumValue=2.0
+                  onValueChanged={v => parentDispatch(SetDelayGain(v))}
+                  value={appState.delay.gain}
+                  maximumValue=0.9
                   minimumValue=0.01
                 />
                 <Center> <Text style=sliderLabelStyle text="GAIN" /> </Center>
@@ -190,23 +195,66 @@ let createElement =
             <View style=paramWrapper>
               <View>
                 <Knob
-                  onValueChanged={v => parentDispatch(SetRelease(v))}
-                  value={appState.tracks[appState.activeTrack].release}
-                  maximumValue=2.0
-                  minimumValue=0.01
+                  onValueChanged={v =>
+                    parentDispatch(
+                      SetFilter(
+                        Filter.create(
+                          appState.filter.mode,
+                          v /. sampleRate,
+                          1.0,
+                          0.0,
+                        ),
+                      ),
+                    )
+                  }
+                  maximumValue=20000.
+                  minimumValue=20.
                 />
                 <Center>
                   <Text style=sliderLabelStyle text="CUTOFF" />
                 </Center>
               </View>
               <View>
-                <Knob
-                  onValueChanged={v => parentDispatch(SetRelease(v))}
-                  value={appState.tracks[appState.activeTrack].release}
-                  maximumValue=2.0
-                  minimumValue=0.01
-                />
-                <Center> <Text style=sliderLabelStyle text="Q" /> </Center>
+                <View style=inputWrapper>
+                  <Checkbox
+                    checked={appState.filter.mode == Filter.LowPass}
+                    onChange={a =>
+                      parentDispatch(
+                        SetFilter(
+                          Filter.create(
+                            Filter.LowPass,
+                            appState.filter.fc,
+                            1.0,
+                            0.0,
+                          ),
+                        ),
+                      )
+                    }
+                    checkedColor={Color.hex("#F16F20")}
+                    style=checkboxStyle
+                  />
+                  <Text style=fxLabelStyle text="LOWPASS" />
+                </View>
+                <View style=inputWrapper>
+                  <Checkbox
+                    checked={appState.filter.mode == Filter.HighPass}
+                    onChange={a =>
+                      parentDispatch(
+                        SetFilter(
+                          Filter.create(
+                            Filter.HighPass,
+                            appState.filter.fc,
+                            0.707,
+                            0.0,
+                          ),
+                        ),
+                      )
+                    }
+                    checkedColor={Color.hex("#F16F20")}
+                    style=checkboxStyle
+                  />
+                  <Text style=fxLabelStyle text="HIGHPASS" />
+                </View>
               </View>
             </View>
           </View>

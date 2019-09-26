@@ -13,6 +13,7 @@ type filter = {
   peakGain: float,
   mutable z1: float,
   mutable z2: float,
+  mode,
 };
 
 let process = (f: filter, input: float) => {
@@ -32,7 +33,7 @@ let create = (mode, cutoff, q, peakGain) => {
     let a2 = a0;
     let b1 = 2. *. (k *. k -. 1.) *. norm;
     let b2 = (1. -. k /. q +. k *. k) *. norm;
-    {a0, a1, a2, b1, b2, fc: cutoff, peakGain, q, z1: 0., z2: 0.};
+    {a0, a1, a2, b1, b2, fc: cutoff, peakGain, q, z1: 0., z2: 0., mode};
   | HighPass =>
     let norm = 1. /. (1. +. k /. q +. k *. k);
     let a0 = 1. *. norm;
@@ -40,6 +41,6 @@ let create = (mode, cutoff, q, peakGain) => {
     let a2 = a0;
     let b1 = 2. *. (k *. k -. 1.) *. norm;
     let b2 = (1. -. k /. q +. k *. k) *. norm;
-    {a0, a1, a2, b1, b2, fc: cutoff, peakGain, q, z1: 0., z2: 0.};
+    {a0, a1, a2, b1, b2, fc: cutoff, peakGain, q, z1: 0., z2: 0., mode};
   };
 };

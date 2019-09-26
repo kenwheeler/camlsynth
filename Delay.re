@@ -1,8 +1,8 @@
 open Settings;
 
 type delay = {
-  duration: float,
-  gain: float,
+  mutable duration: float,
+  mutable gain: float,
   delayBuffer: array(float),
   mutable currentSample: int,
 };

@@ -7,7 +7,15 @@
     "bundleName": "CamlSynthApp",
     "bundleId": "com.kenwheeler.camlsynth",
     "displayName": "ML-808 CamlSynth",
-    "mainExecutable": "App"
+    "mainExecutable": "App",
+    "iconFile": "icon.icns",
+    "darwin": {
+      "packages": [
+        "tar",
+        "dmg"
+      ],
+      "iconFile": "icon.icns"
+    }
   },
   "esy": {
     "build": "refmterr dune build -p App",

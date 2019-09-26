@@ -1,8 +1,8 @@
 open Settings;
 
 type bitcrusher = {
-  bitDepth: float,
-  downSampling: int,
+  mutable bitDepth: float,
+  mutable downSampling: int,
   mutable lastSample: float,
   mutable counter: int,
 };
