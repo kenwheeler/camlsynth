@@ -3,6 +3,12 @@
   "version": "1.3.0",
   "description": "Revery quickstart",
   "license": "MIT",
+  "revery-packager": {
+    "bundleName": "CamlSynthApp",
+    "bundleId": "com.kenwheeler.camlsynth",
+    "displayName": "ML-808 CamlSynth",
+    "mainExecutable": "App"
+  },
   "esy": {
     "build": "refmterr dune build -p App",
     "buildsInSource": "_build",
@@ -35,6 +41,7 @@
   },
   "devDependencies": {
     "ocaml": "~4.7.0",
-    "@opam/merlin": "*"
+    "@opam/merlin": "*",
+    "esy-macdylibbundler": "*"
   }
 }
