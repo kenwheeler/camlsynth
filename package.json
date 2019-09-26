@@ -8,7 +8,10 @@
     "buildsInSource": "_build",
     "sandboxEnv": {
       "PKG_CONFIG_PATH": "#${PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig"
-    }
+    },
+    "install": [
+      "esy-installer App.install"
+    ]
   },
   "dependencies": {
     "ocaml": "~4.7.0",

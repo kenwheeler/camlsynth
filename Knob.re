@@ -62,7 +62,7 @@ let createElement =
     let setSlideRef = r => setSlideRefOption(Some(r));
 
     // When the mouse moves, let's figure out the new slider value
-    let sliderUpdate = (w, startPosition, endPosition, mouseX, mouseY) => {
+    let sliderUpdate = (w, startPosition, endPosition, _mouseX, mouseY) => {
       let mousePosition = mouseY;
       let thumbPosition =
         clamp(mousePosition, startPosition, endPosition) -. startPosition;

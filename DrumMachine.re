@@ -2,7 +2,7 @@ open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 open Audio;
-open Thread;
+//open Thread;
 open Portaudio;
 open AppState;
 
@@ -92,7 +92,7 @@ let createElement = (~children as _, ()) =>
         backgroundColor(Color.hex("#888888")),
         margin(20),
         height(100),
-        borderRadius(5.),
+        //borderRadius(5.),
         border(~width=1, ~color=Color.hex("#888888")),
       ];
     let settingsContainer =
@@ -107,7 +107,7 @@ let createElement = (~children as _, ()) =>
         marginHorizontal(20),
         marginBottom(20),
         marginTop(-10),
-        borderRadius(5.),
+        //borderRadius(5.),
         justifyContent(`SpaceBetween),
         border(~width=1, ~color=Color.hex("#888888")),
       ];

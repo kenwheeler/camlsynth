@@ -56,7 +56,7 @@ let createElement =
           ~color=
             active === true ? Color.hex("#ff3333") : Color.hex("#330000"),
         ),
-        borderRadius(5.),
+        //borderRadius(5.),
         height(10),
         width(10),
         alignSelf(`Center),
