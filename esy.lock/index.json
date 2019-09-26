@@ -1,5 +1,5 @@
 {
-  "checksum": "ac2ee02fc16e5f940c74f61039de7bc5",
+  "checksum": "0f77a4a072381ccf2ca6074792b3fdb1",
   "root": "revery-quick-start@link-dev:./package.json",
   "node": {
     "revery-quick-start@link-dev:./package.json": {
@@ -20,7 +20,8 @@
         "@opam/dune@opam:1.7.3@e23fe0a7"
       ],
       "devDependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/merlin@opam:3.2.2@e3edecdd"
+        "ocaml@4.7.1004@d41d8cd9", "esy-macdylibbundler@0.4.5@d41d8cd9",
+        "@opam/merlin@opam:3.2.2@e3edecdd"
       ]
     },
     "revery@0.27.0@d41d8cd9": {
@@ -305,6 +306,20 @@
       },
       "overrides": [],
       "dependencies": [],
+      "devDependencies": []
+    },
+    "esy-macdylibbundler@0.4.5@d41d8cd9": {
+      "id": "esy-macdylibbundler@0.4.5@d41d8cd9",
+      "name": "esy-macdylibbundler",
+      "version": "0.4.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/esy-macdylibbundler/-/esy-macdylibbundler-0.4.5.tgz#sha1:f4aeadafe072b8fce9603a6da3cd10fa15c23495"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": []
     },
     "esy-harfbuzz@1.9.1005@d41d8cd9": {

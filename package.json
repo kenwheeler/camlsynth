@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "description": "A drum machine built in reason",
   "license": "MIT",
+  "revery-packager": {
+    "bundleName": "CamlSynthApp",
+    "bundleId": "com.kenwheeler.camlsynth",
+    "displayName": "ML-808 CamlSynth",
+    "mainExecutable": "App"
+  },
   "esy": {
     "build": "refmterr dune build -p App",
     "buildsInSource": "_build",
@@ -35,6 +41,7 @@
   },
   "devDependencies": {
     "ocaml": "~4.7.0",
-    "@opam/merlin": "*"
+    "@opam/merlin": "*",
+    "esy-macdylibbundler": "*"
   }
 }
