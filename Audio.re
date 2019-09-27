@@ -39,25 +39,37 @@ let getData = (appState, mtime) =>
   Array.fold_left(
     /* Combine tracks */
     (acc, t) => {
+      let pitchEnvOffset =
+        switch (t.pitchEnv) {
+        | Some(pe) => PitchEnv.nextSample(pe, 0.5)
+        | None => 1.0
+        };
+
+      let frequency = t.freq *. pitchEnvOffset;
+
+      if (frequency > 200.) {
+        Console.log(frequency);
+      };
+
+      let params = [|0., t.attack, t.decay, t.sustain, t.release|];
       let d =
         Array.fold_left(
           /* Combine oscillators */
-          (ac2, o) => {
-            let params = [|0., t.attack, t.decay, t.sustain, t.release|];
+          (ac2, o) =>
             /* Add osc data */
             ac2
             +. Osc.getData(
                  o.wave,
-                 t.freq *. o.offset,
+                 frequency *. o.offset,
                  t.gain *. o.gain,
                  mtime^,
-               )
-            /* Apply envelope */
-            *. Envelope.nextSample(t.env, params);
-          },
+               ),
           0.,
           t.osc,
-        );
+        )
+        /* Apply envelope */
+        *. Envelope.nextSample(t.env, params);
+
       /* return mixed track with filter applied */
       acc
       +. (
@@ -99,6 +111,10 @@ let fill_ba = (ba, dispatch, appState) => {
           let params = [|0., t.attack, t.decay, t.sustain, t.release|];
           if (stepIndex !== 0 && t.steps[stepIndex - 1] === 1) {
             Envelope.enterStage(t.env, Attack, params);
+            switch (t.pitchEnv) {
+            | Some(pe) => PitchEnv.enterStage(pe, PitchEnv.On, 0.5)
+            | None => ()
+            };
           };
         },
         appState.tracks,
