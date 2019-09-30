@@ -41,15 +41,23 @@ let getData = (appState, mtime) =>
     (acc, t) => {
       let pitchEnvOffset =
         switch (t.pitchEnv) {
-        | Some(pe) => PitchEnv.nextSample(pe, 0.5)
+        | Some(pe) => PitchEnv.nextSample(pe, 0.2)
         | None => 1.0
         };
 
       let frequency = t.freq *. pitchEnvOffset;
 
-      if (frequency > 200.) {
-        Console.log(frequency);
-      };
+      let phase =
+        t.freq === frequency
+          ? 0.0
+          : {
+            let fpt = 1. /. t.freq; /* full period time */
+            let lt = mod_float(mtime^, fpt); /* local time */
+            let periodRatio = lt /. fpt;
+            let nextFpt = 1. /. (t.freq *. pitchEnvOffset);
+
+            nextFpt *. periodRatio;
+          };
 
       let params = [|0., t.attack, t.decay, t.sustain, t.release|];
       let d =
@@ -63,6 +71,7 @@ let getData = (appState, mtime) =>
                  frequency *. o.offset,
                  t.gain *. o.gain,
                  mtime^,
+                 phase,
                ),
           0.,
           t.osc,
@@ -112,7 +121,7 @@ let fill_ba = (ba, dispatch, appState) => {
           if (stepIndex !== 0 && t.steps[stepIndex - 1] === 1) {
             Envelope.enterStage(t.env, Attack, params);
             switch (t.pitchEnv) {
-            | Some(pe) => PitchEnv.enterStage(pe, PitchEnv.On, 0.5)
+            | Some(pe) => PitchEnv.enterStage(pe, PitchEnv.On, 0.2)
             | None => ()
             };
           };

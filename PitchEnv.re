@@ -41,8 +41,8 @@ let enterStage = (env, nextStage, duration) => {
     env.currentLevel = 1.;
     env.multiplier = 1.;
   | On =>
-    env.currentLevel = 4.;
-    calculateMultiplier(env, 4., 1., env.nextStageSampleIndex);
+    env.currentLevel = 3.;
+    calculateMultiplier(env, 3., 1., env.nextStageSampleIndex);
   };
   ();
 };
