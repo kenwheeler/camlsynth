@@ -48,16 +48,19 @@ let getData = (appState, mtime) =>
       let frequency = t.freq *. pitchEnvOffset;
 
       let phase =
-        t.freq === frequency
-          ? 0.0
-          : {
-            let fpt = 1. /. t.freq; /* full period time */
-            let lt = mod_float(mtime^, fpt); /* local time */
-            let periodRatio = lt /. fpt;
-            let nextFpt = 1. /. (t.freq *. pitchEnvOffset);
+        switch (t.pitchEnv) {
+        | Some(pe) =>
+          let fpt = 1. /. t.lastFreq; /* full period time */
+          let lt = mod_float(mtime^, fpt); /* local time */
+          let periodRatio = lt /. fpt;
+          let nextFpt = 1. /. (t.freq *. pitchEnvOffset);
 
-            nextFpt *. periodRatio;
-          };
+          1.0 +. nextFpt *. periodRatio;
+        | None => 0.0
+        };
+
+      t.lastPhase = phase;
+      t.lastFreq = frequency;
 
       let params = [|0., t.attack, t.decay, t.sustain, t.release|];
       let d =

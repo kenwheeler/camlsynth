@@ -18,6 +18,8 @@ type track = {
   mutable sustain: float,
   mutable release: float,
   filter: option(Filter.filter),
+  mutable lastPhase: float,
+  mutable lastFreq: float,
 };
 
 type appState = {
@@ -152,6 +154,8 @@ let initialAppState = {
       release: 0.25,
       env: Envelope.create(),
       pitchEnv: Some(PitchEnv.create()),
+      lastPhase: 0.0,
+      lastFreq: 21.83,
       steps: [|1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0|],
       filter:
         Some(Filter.create(Filter.LowPass, 3000. /. sampleRate, 1.0, 0.0)),
@@ -169,6 +173,8 @@ let initialAppState = {
       release: 0.25,
       env: Envelope.create(),
       pitchEnv: None,
+      lastPhase: 0.0,
+      lastFreq: 65.,
       steps: [|0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0|],
       filter:
         Some(Filter.create(Filter.LowPass, 9000. /. sampleRate, 1.0, 0.0)),
@@ -190,6 +196,8 @@ let initialAppState = {
       release: 0.25,
       env: Envelope.create(),
       pitchEnv: None,
+      lastPhase: 0.0,
+      lastFreq: 55.,
       steps: [|0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0|],
       filter:
         Some(Filter.create(Filter.HighPass, 8000. /. sampleRate, 1.0, 0.0)),
@@ -207,6 +215,8 @@ let initialAppState = {
       release: 0.5,
       env: Envelope.create(),
       pitchEnv: None,
+      lastPhase: 0.0,
+      lastFreq: 130.81,
       steps: [|0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0|],
       filter:
         Some(Filter.create(Filter.LowPass, 5000. /. sampleRate, 1.0, 0.0)),
@@ -224,6 +234,8 @@ let initialAppState = {
       release: 0.15,
       env: Envelope.create(),
       pitchEnv: None,
+      lastPhase: 0.0,
+      lastFreq: 130.81,
       steps: [|0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0|],
       filter:
         Some(Filter.create(Filter.HighPass, 1200. /. sampleRate, 1.0, 0.0)),
